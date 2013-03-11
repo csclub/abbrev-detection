@@ -4,3 +4,5 @@
 *.jar
 *.war
 *.ear
+/projects/AbbrevDetector/nbproject/private/
+/projects/abbrev-detector/target/
