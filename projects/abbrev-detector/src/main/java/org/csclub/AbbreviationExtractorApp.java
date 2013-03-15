@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import org.csclub.impl.TrieAbbreviationCounter;
 import org.csclub.impl.AbbreviationCounter_impl;
 import org.csclub.impl.AbbreviationExtractor_impl;
 
@@ -22,7 +23,7 @@ public class AbbreviationExtractorApp  {
     private AbbreviationExtractor abrbevExtractor;
     
     public AbbreviationExtractorApp () {
-        abbrevCounter = new AbbreviationCounter_impl();
+        abbrevCounter = new TrieAbbreviationCounter();
         abrbevExtractor = new AbbreviationExtractor_impl();
     }
     
