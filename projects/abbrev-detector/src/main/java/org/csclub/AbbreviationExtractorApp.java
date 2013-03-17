@@ -1,17 +1,15 @@
 package org.csclub;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+
+import org.csclub.impl.AbbExtractor;
 import org.csclub.impl.TrieAbbreviationCounter;
-import org.csclub.impl.AbbreviationCounter_impl;
-import org.csclub.impl.AbbreviationExtractor_impl;
 
 /**
  * Hello world!
@@ -24,7 +22,7 @@ public class AbbreviationExtractorApp  {
     
     public AbbreviationExtractorApp () {
         abbrevCounter = new TrieAbbreviationCounter();
-        abrbevExtractor = new AbbreviationExtractor_impl();
+        abrbevExtractor = new AbbExtractor();
     }
     
     public void extract(String fileName, String encoding) throws FileNotFoundException, UnsupportedEncodingException, IOException {
