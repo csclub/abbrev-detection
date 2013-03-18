@@ -42,7 +42,7 @@ public class TrieAbbreviationCounter implements AbbreviationCounter {
     private List<Pair<String, Integer>> sortedAbbreviations;
     
     /**
-     * Standart trie implementation with counters in nodes.
+     * Standard trie implementation with counters in nodes.
      */
     private class Trie {
         
@@ -93,7 +93,7 @@ public class TrieAbbreviationCounter implements AbbreviationCounter {
         private List<List<Node>> ends;
         
         /**
-         * Bypass the subtree of node in which all occurences of strings will be
+         * Bypass the subtree of node in which all occurrences of strings will be
          * stored.
          * 
          * @param v is Node, whose subtree will be bypassed.
