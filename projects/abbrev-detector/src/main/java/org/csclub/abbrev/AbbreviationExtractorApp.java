@@ -1,4 +1,4 @@
-package org.csclub;
+package org.csclub.abbrev;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -8,8 +8,10 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
-import org.csclub.impl.AbbExtractor;
-import org.csclub.impl.TrieAbbreviationCounter;
+import org.csclub.abbrev.impl.AbbExtractor;
+import org.csclub.abbrev.impl.AbbreviationCounter_impl;
+import org.csclub.abbrev.impl.AbbreviationExtractor_impl;
+import org.csclub.abbrev.impl.TrieAbbreviationCounter;
 
 /**
  * Hello world!
@@ -21,8 +23,8 @@ public class AbbreviationExtractorApp  {
     private AbbreviationExtractor abrbevExtractor;
     
     public AbbreviationExtractorApp () {
-        abbrevCounter = new TrieAbbreviationCounter();
-        abrbevExtractor = new AbbExtractor();
+        abbrevCounter = new /*TrieAbbreviationCounter()*/ AbbreviationCounter_impl();
+        abrbevExtractor = new /*AbbExtractor()*/ AbbreviationExtractor_impl();
     }
     
     public void extract(String fileName, String encoding) throws FileNotFoundException, UnsupportedEncodingException, IOException {
@@ -31,7 +33,7 @@ public class AbbreviationExtractorApp  {
         
         String strLine;
         while ((strLine = br.readLine()) != null)   {
-            List<String> abbreviations = abrbevExtractor.extract(strLine);
+            List<Abbreviation> abbreviations = abrbevExtractor.extract(strLine);
             abbrevCounter.onNewAbbreviations(abbreviations);
         }
         abbrevCounter.corpusProcessComplete();

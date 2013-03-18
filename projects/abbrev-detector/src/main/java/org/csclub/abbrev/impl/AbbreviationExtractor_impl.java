@@ -2,11 +2,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.csclub.impl;
+package org.csclub.abbrev.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.csclub.AbbreviationExtractor;
+import org.csclub.abbrev.Abbreviation;
+import org.csclub.abbrev.AbbreviationExtractor;
 
 /**
  *
@@ -17,12 +18,19 @@ import org.csclub.AbbreviationExtractor;
  */
 public class AbbreviationExtractor_impl implements AbbreviationExtractor {
     
-    public List<String> extract(final String sentence) {
+    public List<Abbreviation> extract(final String sentence) {
         String [] tokens = sentence.split("[ \t\n]+");
-        List<String> abbreviations = new ArrayList<String> ();
+        List<Abbreviation> abbreviations = new ArrayList<Abbreviation> ();
         for (int i=0; i<tokens.length - 1; i++) {
             if (tokens[i].endsWith(".")) {
-                abbreviations.add(tokens[i]);
+                Abbreviation abbrev = new Abbreviation(tokens[i]);
+                if ( i == 0 && tokens.length >= 1 ) {
+                    abbrev.addAbbrevContext(String.format("%s %s", tokens[i], tokens[1]));
+                } else if (i >=1 && tokens.length >= 2 ) {
+                    abbrev.addAbbrevContext(String.format("%s %s %s", tokens[i-1], tokens[i], tokens[i+1]));
+                } 
+                    
+                abbreviations.add(abbrev);
             }
         }
         return abbreviations;
