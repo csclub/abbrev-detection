@@ -6,3 +6,8 @@
 *.ear
 /projects/AbbrevDetector/nbproject/private/
 /projects/abbrev-detector/target/
+/projects/abbrev-detector/nbproject/private/
+/projects/test/nbproject/private/
+.idea
+target
+/projects/abbrev-detector/abbrev-detector.iml
