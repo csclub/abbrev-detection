@@ -4,6 +4,7 @@
  */
 package org.csclub.abbrev;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
  * 
  * Several questions to answer: (1) Better way to store contexts and (2) Should we store only unique contexts
  */
-public class Abbreviation {
+public class Abbreviation implements Serializable {
     
     public static enum AbbrevState {
         True ("+"),
