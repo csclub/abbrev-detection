@@ -13,11 +13,11 @@ import org.csclub.abbrev.Abbreviation;
  *
  * @author Sergey Serebryakov
  */
-public class Evaluator {
+public class AbbreviationEvaluator {
     
     private Set<String> goldAbbreviations;
     
-    public Evaluator(List<Abbreviation> abbreviations) {
+    public AbbreviationEvaluator(List<Abbreviation> abbreviations) {
         goldAbbreviations = getTextForms(abbreviations);
     }
     

@@ -10,7 +10,7 @@ import static junit.framework.Assert.assertEquals;
 import junit.framework.TestCase;
 import org.csclub.abbrev.Abbreviation;
 import org.csclub.abbrev.evaluation.ConfusionMatrix;
-import org.csclub.abbrev.evaluation.Evaluator;
+import org.csclub.abbrev.evaluation.AbbreviationEvaluator;
 
 /**
  *
@@ -40,7 +40,7 @@ public class EvaluatorTest extends TestCase {
         actualAbbreviations.add(new Abbreviation("K"));
         actualAbbreviations.add(new Abbreviation("N"));
         
-        Evaluator evaluator = new Evaluator(goldAbbreviations);
+        AbbreviationEvaluator evaluator = new AbbreviationEvaluator(goldAbbreviations);
         ConfusionMatrix confusionMatrix = evaluator.evaluate(actualAbbreviations);
         
         assertEquals(confusionMatrix.getFalseNegatives(), 5);
