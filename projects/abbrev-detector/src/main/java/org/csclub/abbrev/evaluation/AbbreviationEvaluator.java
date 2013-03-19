@@ -13,7 +13,7 @@ import org.csclub.abbrev.Abbreviation;
  *
  * @author Sergey Serebryakov
  */
-public class AbbreviationEvaluator {
+public class AbbreviationEvaluator extends Evaluator{
     
     private Set<String> goldAbbreviations;
     
@@ -23,15 +23,7 @@ public class AbbreviationEvaluator {
     
     public ConfusionMatrix evaluate(List<Abbreviation> abbreviations) {
         Set<String> actualAbbreviations = getTextForms(abbreviations);
-        
-        // abbreviatinos from goldAbbreviations that are not in actualAbbreviations
-        Set<String> falseNegativesAbbreviations = Sets.difference(goldAbbreviations, actualAbbreviations);
-        // abrbeviatinos that are in actualAbbreviations but not in goldAbbreviations
-        Set<String> falsePositivesAbbreviations = Sets.difference(actualAbbreviations, goldAbbreviations);
-        // abbreviations that are both in actualAbbreviations and goldAbbreviations
-        Set<String> truePositivesAbbreviations = Sets.intersection(goldAbbreviations, actualAbbreviations);
-        
-        return new ConfusionMatrix( truePositivesAbbreviations.size(), falsePositivesAbbreviations.size(), falseNegativesAbbreviations.size() );
+        return evaluate(goldAbbreviations, actualAbbreviations);
     }
     
     private Set<String> getTextForms(List<Abbreviation> abbreviations) {
