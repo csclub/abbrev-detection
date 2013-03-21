@@ -23,7 +23,7 @@ public class AbbreviationExtractorApp  {
     private AbbreviationExtractor abrbevExtractor;
     
     public AbbreviationExtractorApp () {
-        abbrevCounter = new /*TrieAbbreviationCounter()*/ AbbreviationCounter_impl();
+        abbrevCounter = new TrieAbbreviationCounter() /*AbbreviationCounter_impl()*/;
         abrbevExtractor = new /*AbbExtractor()*/ AbbreviationExtractor_impl();
     }
     

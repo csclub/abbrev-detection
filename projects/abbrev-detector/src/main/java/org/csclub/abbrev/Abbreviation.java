@@ -42,6 +42,11 @@ public class Abbreviation implements Serializable {
     /** state of the abbreviation (true abbreviation, false abbreviation or hard to say (unknown)) */
     private AbbrevState abbrevState;
     
+    public Abbreviation() {
+        abbrevCount = 0;
+        this.abbrevState = AbbrevState.Unknown;
+    }
+    
     public Abbreviation(String abbrevText) {
         this.abbrevText = abbrevText;
         this.abbrevCount = 1;
@@ -54,9 +59,17 @@ public class Abbreviation implements Serializable {
         this.abbrevState = abbrevState;
     }
      
+    public void setAbbrevText(String abbrevText) {
+        this.abbrevText = abbrevText;
+    }
+     
     public void addAbbrevContext(String abbrevContext) {
         this.abbrevContexts.add(abbrevContext);
     }
+    public void addAbbrevContexts(List<String> abbrevContexts) {
+        this.abbrevContexts.addAll(abbrevContexts);
+    }
+    
     
     public String getAbbrevText() { return abbrevText; }
     public int getAbbrevCount() { return abbrevCount; }
@@ -64,6 +77,10 @@ public class Abbreviation implements Serializable {
     public AbbrevState getAbbrevState() { return abbrevState; }
     
     public void incrementCounter() { this.abbrevCount ++; }
+    public void incrementCounter(int count) { 
+        this.abbrevCount += count; 
+    }
+    
     
     public String toString(int maxContextsCount) {
         StringBuilder sb = new StringBuilder ();

@@ -5,158 +5,146 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.csclub.abbrev.Abbreviation;
 import org.csclub.abbrev.AbbreviationCounter;
 
-
 /**
- * Trie implementation of the abbreviation counter component.
- * Time of counting is linear in summary size of abbreviations.
- * 
+ * Trie implementation of the abbreviation counter component. Time of counting
+ * is linear in summary size of abbreviations and contexts.
+ *
  * @author Fedor Amosov
  */
 public class TrieAbbreviationCounter implements AbbreviationCounter {
 
     @Override
-    public void onNewAbbreviations(List<Abbreviation> abbreviations) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void onNewAbbreviations(final List<Abbreviation> abbreviations) {
+        for (Abbreviation abbreviation : abbreviations) {
+            abbrevCounter.add(abbreviation);
+        }
     }
 
     @Override
     public void corpusProcessComplete() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        sortedAbbreviations = abbrevCounter.freqList();
     }
 
     @Override
     public void print(PrintStream ps) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        for (Abbreviation abbreviation : sortedAbbreviations) {
+            ps.println(abbreviation.toString(-1));
+        }
+        System.out.println("-----");
+        System.out.println("Total number of unique abbreviations: " + sortedAbbreviations.size());
     }
-//    
-//    public TrieAbbreviationCounter() {
-//        abbrevCounter = new Trie();
-//    }
-//    
-//    public void onNewAbbreviations(final List<String> abbreviations) {
-//        for(String abbreviation : abbreviations) {
-//            abbrevCounter.add(abbreviation);
-//        }
-//    }
-//    
-//    public void corpusProcessComplete() {
-//        sortedAbbreviations = abbrevCounter.freqList();
-//    }
-//    
-//    public void print(PrintStream cout) {
-//        cout.println(String.format("Total number of abbreviations: %d", sortedAbbreviations.size()));
-//        for (Pair<String, Integer> abbreviation : sortedAbbreviations) {
-//            cout.println(String.format("%s\t%d", abbreviation.getKey(), abbreviation.getValue()));
-//        }
-//    }
-//    
-//    private Trie abbrevCounter;
-//    private List<Pair<String, Integer>> sortedAbbreviations;
-//    
-//    /**
-//     * Standard trie implementation with counters in nodes.
-//     */
-//    private class Trie {
-//        
-//        public Trie() {
-//            root = new Node();
-//        }
-//        
-//        /**
-//         * Add string to the trie.
-//         *
-//         * @param s is addition string.
-//         */
-//        public void add(String s) {
-//            Node cur = root;
-//            for (int i = 0; i < s.length(); ++i) {
-//                if (!cur.next.containsKey(Character.valueOf(s.charAt(i)))) {
-//                    cur.next.put(s.charAt(i), new Node(cur, s.charAt(i)));
-//                }
-//                cur = cur.next.get(s.charAt(i));
-//            }
-//            ++cur.val;
-//            ++size;
-//        }
-//        
-//        /**
-//         * @return list of pairs (string, count in trie) ordered by decreasing 
-//         * of count. 
-//         */
-//        public List<Pair<String, Integer>> freqList() {
-//            ends =  new ArrayList<List<Node>>();
-//            for (int i = 0; i <= size; ++i) { 
-//                ends.add(new ArrayList<Node>());
-//            }
-//            
-//            dfs(root);
-//            
-//            List<Pair<String, Integer>> result = new ArrayList<Pair<String, Integer>>();
-//            for (int i = ends.size() - 1; i > 0; --i) {
-//                for (Node end : ends.get(i)) {
-//                    result.add(new ImmutablePair<String, Integer>(get(end), i));
-//                }
-//            }
-//            return result;
-//        }
-//        
-//        private Node root;
-//        private int size;    
-//        private List<List<Node>> ends;
-//        
-//        /**
-//         * Bypass the subtree of node in which all occurrences of strings will be
-//         * stored.
-//         * 
-//         * @param v is Node, whose subtree will be bypassed.
-//         */
-//        private void dfs(Node v) {
-//            if (v.val > 0) {
-//                ends.get(v.val).add(v);
-//            }
-//            
-//            for (Entry<Character, Node> edge : v.next.entrySet()) {
-//                dfs(edge.getValue());
-//            }
-//        }
-//        
-//        /**
-//         * Obtaining the string, which finishes in the node.
-//         * 
-//         * @param v is Node, whose string will be obtain.
-//         * 
-//         * @return string with end in v. 
-//         */
-//        private String get(Node v) {
-//            StringBuilder abbreviation = new StringBuilder();
-//            while (v.prev != null) {
-//                abbreviation.append(v.edge);
-//                v = v.prev;
-//            }
-//            return abbreviation.reverse().toString();
-//        }
-//        
-//        private class Node {
-//            public int val;
-//            public HashMap<Character, Node> next;
-//            public Node prev;
-//            public Character edge;
-//            
-//            public Node() {
-//                next = new HashMap<Character, Node>();
-//            }
-//            
-//            public Node(Node prev, Character edge) {
-//                this.prev = prev;
-//                this.edge = edge;
-//                next = new HashMap<Character, Node>();
-//            }    
-//        }
-//    }
-}
 
+    public TrieAbbreviationCounter() {
+        abbrevCounter = new Trie();
+    }
+
+    private Trie abbrevCounter;   
+    private List<Abbreviation> sortedAbbreviations;
+
+    /**
+     * Standard trie implementation with counters in nodes.
+     */
+    private class Trie {
+
+        public Trie() {
+            root = new Node();
+        }
+
+        /**
+         * Add abbreviation to the trie.
+         *
+         * @param abbreviation is addition abbreviation.
+         */
+        public void add(Abbreviation abbreviation) {
+            Node cur = root;
+            for (int i = 0; i < abbreviation.getAbbrevText().length(); ++i) {
+                if (!cur.next.containsKey(Character.valueOf(abbreviation.getAbbrevText().charAt(i)))) {
+                    cur.next.put(abbreviation.getAbbrevText().charAt(i), new Node(cur, abbreviation.getAbbrevText().charAt(i)));
+                }
+                cur = cur.next.get(abbreviation.getAbbrevText().charAt(i));
+            }
+            cur.contexts.addAll(abbreviation.getAbbrevContexts());
+            ++size;
+        }
+
+        /**
+         * @return list of abbreviations ordered by decreasing
+         * of count.
+         */
+        public List<Abbreviation> freqList() {
+            ends = new ArrayList<List<Node>>();
+            for (int i = 0; i <= size; ++i) {
+                ends.add(new ArrayList<Node>());
+            }
+
+            dfs(root);
+
+            List<Abbreviation> result = new ArrayList<Abbreviation>();
+            for (int i = ends.size() - 1; i > 0; --i) {
+                for (Node end : ends.get(i)) {
+                    Abbreviation current = new Abbreviation();
+                    current.setAbbrevText(get(end));
+                    
+                    current.addAbbrevContexts(end.contexts);
+                    current.incrementCounter(end.contexts.size());
+                    result.add(current);
+                }
+            }
+            return result;
+        }
+        private Node root;
+        private int size;
+        private List<List<Node>> ends;
+        private List<List<String>> contexts;
+
+        /**
+         * Bypass the subtree of node in which all contexts of abbreviations will
+         * be stored.
+         *
+         * @param v is Node, whose subtree will be bypassed.
+         */
+        private void dfs(Node v) {
+            if (v.contexts.size() > 0) {
+                ends.get(v.contexts.size()).add(v);
+            }
+
+            for (Entry<Character, Node> edge : v.next.entrySet()) {
+                dfs(edge.getValue());
+            }
+        }
+
+        /**
+         * Obtaining the string, which finishes in the node.
+         *
+         * @param v is Node, whose string will be obtain.
+         *
+         * @return string with end in v.
+         */
+        private String get(Node v) {
+            StringBuilder abbreviation = new StringBuilder();
+            while (v.prev != null) {
+                abbreviation.append(v.edge);
+                v = v.prev;
+            }
+            return abbreviation.reverse().toString();
+        }
+
+        private class Node {
+            public HashMap<Character, Node> next = new HashMap<Character, Node>();
+            public Node prev;
+            public Character edge;
+            public List<String> contexts = new ArrayList<String>();
+
+            public Node() {
+            }
+
+            public Node(Node prev, Character edge) {
+                this.prev = prev;
+                this.edge = edge;
+            }
+        }
+    }
+}
