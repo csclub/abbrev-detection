@@ -33,8 +33,8 @@ public class TrieAbbreviationCounter implements AbbreviationCounter {
         for (Abbreviation abbreviation : sortedAbbreviations) {
             ps.println(abbreviation.toString(-1));
         }
-        System.out.println("-----");
-        System.out.println("Total number of unique abbreviations: " + sortedAbbreviations.size());
+        ps.println("-----");
+        ps.println("Total number of unique abbreviations: " + sortedAbbreviations.size());
     }
 
     public TrieAbbreviationCounter() {
