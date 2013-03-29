@@ -36,6 +36,14 @@ public class TrieAbbreviationCounter implements AbbreviationCounter {
         ps.println("-----");
         ps.println("Total number of unique abbreviations: " + sortedAbbreviations.size());
     }
+    
+    @Override
+    public List<Abbreviation> getSortedAbbreviations() {
+        if (sortedAbbreviations == null) {
+            corpusProcessComplete();
+        }
+        return sortedAbbreviations;
+    }
 
     public TrieAbbreviationCounter() {
         abbrevCounter = new Trie();
@@ -75,14 +83,14 @@ public class TrieAbbreviationCounter implements AbbreviationCounter {
          * of count.
          */
         public List<Abbreviation> freqList() {
-            ends = new ArrayList<List<Node>>();
+            ends = new ArrayList<>();
             for (int i = 0; i <= size; ++i) {
                 ends.add(new ArrayList<Node>());
             }
 
             dfs(root);
 
-            List<Abbreviation> result = new ArrayList<Abbreviation>();
+            List<Abbreviation> result = new ArrayList<>();
             for (int i = ends.size() - 1; i > 0; --i) {
                 for (Node end : ends.get(i)) {
                     Abbreviation current = new Abbreviation();
@@ -133,10 +141,10 @@ public class TrieAbbreviationCounter implements AbbreviationCounter {
         }
 
         private class Node {
-            public HashMap<Character, Node> next = new HashMap<Character, Node>();
+            public HashMap<Character, Node> next = new HashMap<>();
             public Node prev;
             public Character edge;
-            public List<String> contexts = new ArrayList<String>();
+            public List<String> contexts = new ArrayList<>();
 
             public Node() {
             }
