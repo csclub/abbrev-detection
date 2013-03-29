@@ -16,4 +16,5 @@ public interface AbbreviationCounter {
     public void onNewAbbreviations(final List<Abbreviation> abbreviations);
     public void corpusProcessComplete();
     public void print(PrintStream ps);
+    public List<Abbreviation> getSortedAbbreviations();
 }
