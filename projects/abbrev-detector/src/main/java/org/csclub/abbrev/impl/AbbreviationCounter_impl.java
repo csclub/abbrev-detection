@@ -68,12 +68,27 @@ public class AbbreviationCounter_impl implements AbbreviationCounter {
     }
     
     @Override
-     public void print(PrintStream ps) {
-         for (Pair<String, Abbreviation> abbreviation : sortedAbbreviations) {
-             ps.println(abbreviation.getValue().toString(-1));
-         }
-         System.out.println("-----");
-         System.out.println("Total number of unique abbreviations: " + sortedAbbreviations.size());
-         
-     }
+    public void print(PrintStream ps) {
+        for (Pair<String, Abbreviation> abbreviation : sortedAbbreviations) {
+            ps.println(abbreviation.getValue().toString(-1));
+        }
+        System.out.println("-----");
+        System.out.println("Total number of unique abbreviations: " + sortedAbbreviations.size());
+        
+    }
+    
+    @Override
+    public List<Abbreviation> getSortedAbbreviations() {
+        if (sortedAbbreviations == null) {
+            corpusProcessComplete();
+        }
+        
+        List<Abbreviation> result = new ArrayList<Abbreviation>();
+        
+        for (Pair<String, Abbreviation> abbreviation : sortedAbbreviations) {
+            result.add(abbreviation.getValue());
+        }
+        
+        return result;
+    }
 }
