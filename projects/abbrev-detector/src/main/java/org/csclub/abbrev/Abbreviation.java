@@ -14,7 +14,7 @@ import java.util.List;
  * 
  * Several questions to answer: (1) Better way to store contexts and (2) Should we store only unique contexts
  */
-public class Abbreviation implements Serializable {
+public class Abbreviation implements Serializable, Comparable {
     
     public static enum AbbrevState {
         True ("+"),
@@ -38,7 +38,7 @@ public class Abbreviation implements Serializable {
     /** number of times this abbreviation has been hit (found in the documents) */
     private int abbrevCount;
     /** list of abbreviation contexts */
-    private List<String> abbrevContexts = new ArrayList<String> ();
+    private List<String> abbrevContexts = new ArrayList();
     /** state of the abbreviation (true abbreviation, false abbreviation or hard to say (unknown)) */
     private AbbrevState abbrevState;
     
@@ -53,9 +53,15 @@ public class Abbreviation implements Serializable {
         this.abbrevState = AbbrevState.Unknown;
     }
     
-     public Abbreviation(String abbrevText, AbbrevState abbrevState) {
+    public Abbreviation(String abbrevText, AbbrevState abbrevState) {
         this.abbrevText = abbrevText;
         this.abbrevCount = 1;
+        this.abbrevState = abbrevState;
+    }
+    
+    public Abbreviation(AbbrevState abbrevState, int abbrevCount, String abbrevText) {
+        this.abbrevText = abbrevText;
+        this.abbrevCount = abbrevCount;
         this.abbrevState = abbrevState;
     }
      
@@ -96,4 +102,35 @@ public class Abbreviation implements Serializable {
         return String.format("%s\t%d\t%s\t%s", abbrevState, abbrevCount, abbrevText, sb.toString());
     }
     
+    @Override
+    public int compareTo(Object o) {
+        if (!(o instanceof Abbreviation)) {
+            return 0;
+        }
+        
+        Abbreviation other = (Abbreviation)o;
+        
+        if (getAbbrevCount() < other.getAbbrevCount()) {
+            return 1;
+        } 
+        if (getAbbrevCount() > other.getAbbrevCount()) {
+            return -1;
+        }
+        
+        if (abbrevText.length() > other.abbrevText.length()) {
+            return 1;
+        }
+        if (abbrevText.length() < other.abbrevText.length()) {
+            return -1;
+        }
+        
+        if (this.hashCode() < other.hashCode()) {
+            return 1;
+        } 
+        if (this.hashCode() > other.hashCode()) {
+            return -1;
+        } 
+        
+        return 0;
+    }
 }
