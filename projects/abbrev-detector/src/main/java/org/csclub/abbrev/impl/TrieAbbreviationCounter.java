@@ -70,12 +70,15 @@ public class TrieAbbreviationCounter implements AbbreviationCounter {
             Node cur = root;
             for (int i = 0; i < abbreviation.getAbbrevText().length(); ++i) {
                 if (!cur.next.containsKey(Character.valueOf(abbreviation.getAbbrevText().charAt(i)))) {
-                    cur.next.put(abbreviation.getAbbrevText().charAt(i), new Node(cur, abbreviation.getAbbrevText().charAt(i)));
+                    cur.next.put(abbreviation.getAbbrevText().charAt(i), 
+                                 new Node(cur, abbreviation.getAbbrevText().charAt(i), abbreviation.getAbbrevState()));
                 }
                 cur = cur.next.get(abbreviation.getAbbrevText().charAt(i));
             }
             cur.contexts.addAll(abbreviation.getAbbrevContexts());
+            
             ++size;
+            maxLen = Math.max(maxLen, abbreviation.getAbbrevText().length());
         }
 
         /**
@@ -83,30 +86,33 @@ public class TrieAbbreviationCounter implements AbbreviationCounter {
          * of count.
          */
         public List<Abbreviation> freqList() {
-            ends = new ArrayList<>();
+            tails = new ArrayList();
             for (int i = 0; i <= size; ++i) {
-                ends.add(new ArrayList<Node>());
+                tails.add(new ArrayList());
+                for (int j = 0; j <= maxLen; ++j) {
+                    tails.get(i).add(new ArrayList());
+                }
             }
 
             dfs(root);
 
-            List<Abbreviation> result = new ArrayList<>();
-            for (int i = ends.size() - 1; i > 0; --i) {
-                for (Node end : ends.get(i)) {
-                    Abbreviation current = new Abbreviation();
-                    current.setAbbrevText(get(end));
-                    
-                    current.addAbbrevContexts(end.contexts);
-                    current.incrementCounter(end.contexts.size());
-                    result.add(current);
+            List<Abbreviation> result = new ArrayList();
+            for (int i = tails.size() - 1; i > 0; --i) {
+                for (List<Node> freqLevel : tails.get(i)) {
+                    for (Node tail : freqLevel) {
+                        Abbreviation cur = new Abbreviation(tail.state, tail.contexts.size(), get(tail));
+                        cur.addAbbrevContexts(tail.contexts);
+                        result.add(cur);
+                    }
                 }
             }
             return result;
         }
+        
         private Node root;
         private int size;
-        private List<List<Node>> ends;
-        private List<List<String>> contexts;
+        private int maxLen;
+        private List<List<List<Node>>> tails;
 
         /**
          * Bypass the subtree of node in which all contexts of abbreviations will
@@ -116,7 +122,7 @@ public class TrieAbbreviationCounter implements AbbreviationCounter {
          */
         private void dfs(Node v) {
             if (v.contexts.size() > 0) {
-                ends.get(v.contexts.size()).add(v);
+                tails.get(v.contexts.size()).get(v.dist).add(v);
             }
 
             for (Entry<Character, Node> edge : v.next.entrySet()) {
@@ -141,17 +147,21 @@ public class TrieAbbreviationCounter implements AbbreviationCounter {
         }
 
         private class Node {
-            public HashMap<Character, Node> next = new HashMap<>();
+            public HashMap<Character, Node> next = new HashMap();
             public Node prev;
             public Character edge;
-            public List<String> contexts = new ArrayList<>();
+            public List<String> contexts = new ArrayList();
+            public Abbreviation.AbbrevState state;
+            public int dist = 0;
 
             public Node() {
             }
 
-            public Node(Node prev, Character edge) {
+            public Node(Node prev, Character edge, Abbreviation.AbbrevState state) {
                 this.prev = prev;
                 this.edge = edge;
+                this.dist = prev.dist + 1;
+                this.state = state;
             }
         }
     }
