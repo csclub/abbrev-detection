@@ -69,7 +69,7 @@ public class Delimiter {
      * @return number between 0 and 1, the portion of first similar elements.
      */
     private static double firstPartShare(double[] f) {
-        int windowSize = (int) Math.sqrt(f.length) + 1;
+        int windowSize = (int)(Math.sqrt(f.length)) + 1;
 
         double windowAverage = 0;
         for (int i = 0; i < f.length; ++i) {
@@ -98,7 +98,7 @@ public class Delimiter {
                 r = i;
             }
         }
-        //System.out.println(l + " " + r);
+        
         return (l + r + windowSize) / (2.0 * f.length);
     }
 }
