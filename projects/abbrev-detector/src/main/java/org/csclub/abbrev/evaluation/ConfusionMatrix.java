@@ -31,34 +31,49 @@ public class ConfusionMatrix {
         this.falseNegatives = falseNegatives;
     }
      
-     public int getTruePositives() { return truePositives; }
-     public int getFalsePositives() { return falsePositives; }
-     public int getFalseNegatives() { return falseNegatives; }
+    public int getTruePositives() { 
+        return truePositives; 
+    }
+    public int getFalsePositives() { 
+        return falsePositives; 
+    }
+    public int getFalseNegatives() { 
+        return falseNegatives; 
+    }
      
-     public float getPrecision() {
+    public float getPrecision() {
         float precision = UNDEFINED; 
         int retrivedAbbreviations = truePositives + falsePositives;
         if (retrivedAbbreviations > 0) {
             precision = (float) (truePositives) / retrivedAbbreviations;
         }
         return precision;
-     }
+    }
      
-     public float getRecall() {
+    public float getRecall() {
         float recall = UNDEFINED; 
         int relevantAbbreviations = truePositives + falseNegatives;
         if (relevantAbbreviations > 0) {
             recall = (float) (truePositives) / relevantAbbreviations;
         }
         return recall;
-     }
-     public float getF1Measure() {
-         float f1Measure = UNDEFINED;
-         float precision = getPrecision();
-         float recall = getRecall();
-         if (precision >= 0 && recall >= 0 && precision + recall > 0) {
-             f1Measure = 2 * precision * recall / (precision + recall);
-         }
-         return f1Measure;
-     }
+    }
+    
+    public float getF1Measure() {
+        float f1Measure = UNDEFINED;
+        float precision = getPrecision();
+        float recall = getRecall();
+        if (precision >= 0 && recall >= 0 && precision + recall > 0) {
+            f1Measure = 2 * precision * recall / (precision + recall);
+        }
+        return f1Measure;
+    }
+     
+    public void print(String info) {
+        System.out.println(info);
+        System.out.println("\tPrecision =\t" + getPrecision());
+        System.out.println("\tRecall =\t" + getRecall());
+        System.out.println("\tF1 Measure =\t" + getF1Measure());
+        System.out.println();
+    }
 }
