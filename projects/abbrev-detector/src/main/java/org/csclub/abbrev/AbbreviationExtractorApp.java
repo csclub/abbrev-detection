@@ -24,8 +24,8 @@ public class AbbreviationExtractorApp  {
     private AbbreviationExtractor abrbevExtractor;
     
     public AbbreviationExtractorApp () {
-        abbrevCounter = new TrieAbbreviationCounter() /*AbbreviationCounter_impl()*/;
-        abrbevExtractor = new /*AbbExtractor()*/ AbbreviationExtractor_impl();
+        abbrevCounter = new TrieAbbreviationCounter();
+        abrbevExtractor = new AbbreviationExtractor_impl();
     }
     
     public void extract(String fileName, String encoding) throws FileNotFoundException, UnsupportedEncodingException, IOException {
@@ -33,20 +33,16 @@ public class AbbreviationExtractorApp  {
         BufferedReader br = new BufferedReader(isr);
         
         String strLine;
-        while ((strLine = br.readLine()) != null)   {
+        while ((strLine = br.readLine()) != null) {
             List<Abbreviation> abbreviations = abrbevExtractor.extract(strLine);
             abbrevCounter.onNewAbbreviations(abbreviations);
         }
+        
         abbrevCounter.corpusProcessComplete();
         abbrevCounter.print(System.out);
     }
     
-    public void collate(String fileName, String encoding) throws FileNotFoundException, UnsupportedEncodingException, IOException {
-        List<Abbreviation> goldAbbreviations = new Serializer().fromTextFile(fileName, encoding);
-        
-        abbrevCounter.onNewAbbreviations(goldAbbreviations);
-        abbrevCounter.corpusProcessComplete();
-        
+    public ConfusionMatrix delimiterAnalysis(final List<Abbreviation> goldAbbreviations) {
         Delimiter.setShareOfAbbreviations(goldAbbreviations);
         
         List<Abbreviation> trueAbbreviations = new ArrayList();
@@ -55,6 +51,33 @@ public class AbbreviationExtractorApp  {
             Abbreviation cur = goldAbbreviations.get(i);
             if (i <= Delimiter.shareOfAbbreviations * goldAbbreviations.size()) {
                 System.out.println(i + 1 + "\tOK\t" + cur.toString(-1));
+                
+            }
+            else {
+                System.out.println(i + 1 + "\tNOT\t" + cur.toString(-1));
+            }
+            
+            if (goldAbbreviations.get(i).getAbbrevState() == Abbreviation.AbbrevState.True) {
+                trueAbbreviations.add(goldAbbreviations.get(i));
+            }
+          
+        }
+        System.out.println();
+        
+        AbbreviationEvaluator evaluator = new AbbreviationEvaluator(trueAbbreviations);
+        return evaluator.evaluate(Delimiter.probablyAbbreviations(goldAbbreviations));
+    }
+    
+    public ConfusionMatrix constLimitAnalysis(final List<Abbreviation> goldAbbreviations, int lim) {
+        List<Abbreviation> trueAbbreviations = new ArrayList();
+        List<Abbreviation> positiveAbbreviations = new ArrayList();
+        
+        
+        for (int i = 0; i < goldAbbreviations.size(); ++i) {
+            Abbreviation cur = goldAbbreviations.get(i);
+            if (cur.getAbbrevCount() >= lim) {
+                System.out.println(i + 1 + "\tOK\t" + cur.toString(-1));
+                positiveAbbreviations.add(cur);
             }
             else {
                 System.out.println(i + 1 + "\tNOT\t" + cur.toString(-1));
@@ -67,11 +90,18 @@ public class AbbreviationExtractorApp  {
         System.out.println();
         
         AbbreviationEvaluator evaluator = new AbbreviationEvaluator(trueAbbreviations);
-        ConfusionMatrix matrix = evaluator.evaluate(Delimiter.probablyAbbreviations(goldAbbreviations));
+        return evaluator.evaluate(positiveAbbreviations);
+    }
+    
+    public void collate(String fileName, String encoding) throws FileNotFoundException, UnsupportedEncodingException, IOException {
+        List<Abbreviation> goldAbbreviations = new Serializer().fromTextFile(fileName, encoding);
         
-        System.out.println("Precision:\t" + matrix.getPrecision());
-        System.out.println("Recall:\t\t" + matrix.getRecall());
-        System.out.println("F1 Measure:\t" + matrix.getF1Measure());
+        abbrevCounter.onNewAbbreviations(goldAbbreviations);
+        abbrevCounter.corpusProcessComplete();
+        
+        delimiterAnalysis(goldAbbreviations).print("Delimiter algorithm:");
+        constLimitAnalysis(goldAbbreviations, 2).print("Const limit algorithm:");
+        constLimitAnalysis(goldAbbreviations, 0).print("Zero limit algorithm:");
     }
     
     public static void main( String[] args ) {
