@@ -1,4 +1,4 @@
-package org.csclub.abbrev.impl;
+package org.csclub.abbrev.algorithms.tba.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,7 @@ public class Delimiter {
     public static void setShareOfAbbreviations(List<Abbreviation> goldAbbreviations) {
         double[] f = new double[goldAbbreviations.size()];
         for (int i = 0; i < f.length; ++i) {
-            switch (goldAbbreviations.get(i).getAbbrevState().toString()) {
+            switch (((Abbreviation)(goldAbbreviations.get(i))).getAbbrevState().toString()) {
                 case "+":
                     f[i] = 1.0;
                     
@@ -99,6 +99,6 @@ public class Delimiter {
             }
         }
         
-        return (l + r + windowSize) / (2.0 * f.length);
+        return (double)(l + r + windowSize) / (2.0 * f.length);
     }
 }

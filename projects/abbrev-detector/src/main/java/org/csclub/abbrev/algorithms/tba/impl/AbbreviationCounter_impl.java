@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.csclub.abbrev.impl;
+package org.csclub.abbrev.algorithms.tba.impl;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import java.util.Map.Entry;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.csclub.abbrev.Abbreviation;
-import org.csclub.abbrev.AbbreviationCounter;
+import org.csclub.abbrev.algorithms.tba.AbbreviationCounter;
 
 /**
  *

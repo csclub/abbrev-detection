@@ -26,7 +26,7 @@ import java.util.Scanner;
  */
 public class Serializer {
     
-    public void toTextFile(String fileName, String encoding, List<Abbreviation> abbreviations, int maxContextsCount) throws IOException {
+    public static void toTextFile(String fileName, String encoding, List<Abbreviation> abbreviations, int maxContextsCount) throws IOException {
         Path filePath = Paths.get(fileName);
         try (BufferedWriter writer = Files.newBufferedWriter(filePath, Charset.forName(encoding))) {
             for(Abbreviation abbrev : abbreviations){
@@ -36,13 +36,13 @@ public class Serializer {
         }
     }
     
-    public void toBinaryFile(String fileName, List<Abbreviation> abbreviations) throws IOException {
+    public static void toBinaryFile(String fileName, List<Abbreviation> abbreviations) throws IOException {
         try (ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(fileName)))) {
             oos.writeObject(abbreviations);
         }
     }
     
-    public List<Abbreviation> fromTextFile(String fileName, String encoding) throws IOException {
+    public static List<Abbreviation> fromTextFile(String fileName, String encoding) throws IOException {
         List<Abbreviation> result = new ArrayList();
         try (Scanner reader = new Scanner(new FileInputStream(fileName), encoding)) {
             while (reader.hasNextLine()) {
@@ -72,7 +72,7 @@ public class Serializer {
         return result;
     }
     
-    public List<Abbreviation> fromBinaryFile(String fileName) throws IOException, ClassNotFoundException {
+    public static List<Abbreviation> fromBinaryFile(String fileName) throws IOException, ClassNotFoundException {
         ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(fileName)));
         List<Abbreviation> abbreviations = (List<Abbreviation>)ois.readObject();
         return abbreviations;

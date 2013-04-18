@@ -18,18 +18,24 @@ public class AbbreviationEvaluator extends Evaluator{
     private Set<String> goldAbbreviations;
     
     public AbbreviationEvaluator(List<Abbreviation> abbreviations) {
-        goldAbbreviations = getTextForms(abbreviations);
+        goldAbbreviations = getTextForms(abbreviations, true);
     }
     
     public ConfusionMatrix evaluate(List<Abbreviation> abbreviations) {
-        Set<String> actualAbbreviations = getTextForms(abbreviations);
+        Set<String> actualAbbreviations = getTextForms(abbreviations, false);
         return evaluate(goldAbbreviations, actualAbbreviations);
     }
     
-    private Set<String> getTextForms(List<Abbreviation> abbreviations) {
+    private Set<String> getTextForms(List<Abbreviation> abbreviations, boolean goldStandard) {
         Set<String> textForms = Sets.newHashSet();
         for (Abbreviation abbreviation: abbreviations) {
-            textForms.add(abbreviation.getAbbrevText());
+            if (goldStandard) {
+                if (abbreviation.getAbbrevState() == Abbreviation.AbbrevState.True) {
+                    textForms.add(abbreviation.getAbbrevText());
+                }
+            } else {
+                textForms.add(abbreviation.getAbbrevText());
+            }
         }
         return textForms;
     }

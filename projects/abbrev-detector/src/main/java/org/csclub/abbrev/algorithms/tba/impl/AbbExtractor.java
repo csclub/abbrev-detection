@@ -1,14 +1,15 @@
-package org.csclub.abbrev.impl;
+package org.csclub.abbrev.algorithms.tba.impl;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.csclub.abbrev.AbbreviationExtractor;
+import org.csclub.abbrev.algorithms.tba.AbbreviationExtractor;
 
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.csclub.abbrev.Abbreviation;
+import org.csclub.abbrev.Sentence;
 
 /**
  * Created by IntelliJ IDEA.
@@ -16,11 +17,13 @@ import org.csclub.abbrev.Abbreviation;
  */
 public class AbbExtractor implements AbbreviationExtractor {
 
-    public List<Abbreviation> extract(final String sentence) {
-        Pattern p = Pattern.compile("(.*)([\\.,&!<>)(»«²]+)(.)");  //kills structures as "yes)."
+    private Pattern p = Pattern.compile("(.*)([\\.,&!<>)(»«²]+)(.)");  //kills structures as "yes)."
+    
+    @Override
+    public List<Abbreviation> extract(Sentence sentence) {
         Matcher m;
-        StringTokenizer st = new StringTokenizer(sentence, "[ \t\n\r ]+");
-        List<Abbreviation> wordsWithDots = new ArrayList<Abbreviation>();
+        StringTokenizer st = new StringTokenizer(sentence.getSentence(), "[ \t\n\r ]+");
+        List<Abbreviation> wordsWithDots = new ArrayList<>();
         String currentWord;
         currentWord = st.nextToken();
         m = p.matcher(currentWord);

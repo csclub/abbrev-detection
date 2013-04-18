@@ -2,14 +2,16 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.csclub.abbrev.impl;
+package org.csclub.abbrev.algorithms.tba.impl;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.csclub.abbrev.AbbreviationUtils;
 import org.csclub.abbrev.Abbreviation;
-import org.csclub.abbrev.AbbreviationExtractor;
+import org.csclub.abbrev.algorithms.tba.AbbreviationExtractor;
+import org.csclub.abbrev.Sentence;
 
 /**
  *
@@ -33,8 +35,13 @@ public class AbbreviationExtractor_impl implements AbbreviationExtractor {
      * @return List of candidate abbreviations
      */
     @Override
-    public List<Abbreviation> extract(final String sentence) {
-        String[] tokens = sentence.split("[\\s()\"«»\\[\\]]");
+    public List<Abbreviation> extract(Sentence sentence) {
+        String[] tokens;
+        if (null != sentence.getTokens()) {
+            tokens = sentence.getTokens().toArray(new String [sentence.getTokens().size()]);
+        } else {
+            tokens = AbbreviationUtils.tokenize(sentence.getSentence());
+        }
         List<Abbreviation> abbreviations = new ArrayList<>();
         for (int i = 0; i < tokens.length - 1; i++) {
             if (tokens[i].endsWith(".")) {
@@ -75,4 +82,5 @@ public class AbbreviationExtractor_impl implements AbbreviationExtractor {
         }
         return _token;
     }
+    //
 }

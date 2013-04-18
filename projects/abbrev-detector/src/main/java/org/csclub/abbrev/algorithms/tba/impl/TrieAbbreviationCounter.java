@@ -1,4 +1,4 @@
-package org.csclub.abbrev.impl;
+package org.csclub.abbrev.algorithms.tba.impl;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import org.csclub.abbrev.Abbreviation;
-import org.csclub.abbrev.AbbreviationCounter;
+import org.csclub.abbrev.algorithms.tba.AbbreviationCounter;
 
 /**
  * Trie implementation of the abbreviation counter component. Time of counting

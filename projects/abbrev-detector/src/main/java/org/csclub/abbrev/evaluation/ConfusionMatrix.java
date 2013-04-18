@@ -68,6 +68,11 @@ public class ConfusionMatrix {
         }
         return f1Measure;
     }
+    
+    @Override
+    public String toString() {
+        return String.format("p=%.3f, r=%.3f, f1=%.3f", getPrecision(), getRecall(), getF1Measure());
+    }
      
     public void print(String info) {
         System.out.println(info);

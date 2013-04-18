@@ -10,6 +10,7 @@ import static junit.framework.Assert.assertEquals;
 import junit.framework.TestCase;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import org.csclub.abbrev.algorithms.tba.impl.AbbreviationExtractor_impl;
 
 /**
  *
