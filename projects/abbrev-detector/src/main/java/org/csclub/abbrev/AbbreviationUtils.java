@@ -2,6 +2,7 @@ package org.csclub.abbrev;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,8 +11,15 @@ import java.util.List;
  */
 public class AbbreviationUtils {
 
-    public static String[] tokenize(String sentence) {
-        return sentence.split("[\\s()\"«»\\[\\]]");
+    public static List<String> tokenize(String sentence) {
+        String[] tempTokens = sentence.split("[\\s()\"«»\\[\\]?:,;!]");
+        List<String> tokens = new ArrayList();
+        for (int i = 0; i < tempTokens.length; ++i) {
+            if (!tempTokens[i].isEmpty()) {
+                tokens.add(tempTokens[i]);
+            }
+        }
+        return tokens;
     }
     
     public static Object createClassInstance(String className) throws ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
