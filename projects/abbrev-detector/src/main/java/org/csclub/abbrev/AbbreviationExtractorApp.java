@@ -7,13 +7,13 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import org.csclub.abbrev.algorithms.Algorithm;
-import org.csclub.abbrev.evaluation.AbbreviationEvaluator;
-import org.csclub.abbrev.evaluation.ConfusionMatrix;
 import org.csclub.abbrev.algorithms.tba.impl.Delimiter;
 import org.csclub.abbrev.connectors.CorpusReader;
+import org.csclub.abbrev.evaluation.AbbreviationEvaluator;
+import org.csclub.abbrev.evaluation.ConfusionMatrix;
 import org.csclub.abbrev.impl.Component;
-import org.csclub.abbrev.impl.ConfigurationParameter;
 import org.csclub.abbrev.impl.Configuration;
+import org.csclub.abbrev.impl.ConfigurationParameter;
 
 /**
  * @author Sergey Serebryakov
@@ -176,6 +176,25 @@ public class AbbreviationExtractorApp  extends Component {
                 
                 ConfusionMatrix matrix = evaluator.evaluate(app.algorithm.getAbbreviations());
                 System.out.println("Fraction based: " + matrix);
+            }
+            
+            
+            {
+                String corpusFile = Paths.get(System.getProperty("user.dir"), "../../datasets/opencorpora/opencorpora.sent.train.ru").toString();
+                Configuration config = new Configuration(new String [] 
+                                                {   
+                                                    "ConnectorClass", "org.csclub.abbrev.connectors.SentPerLineCorpusReader",
+                                                    "Connector.FileName", corpusFile,
+                                                    "Connector.FileEncoding", "UTF-8",
+                                                    "AlgorithmClass", "org.csclub.abbrev.algorithms.tba.TTestBasedAlgorithm",
+                                                } 
+                                             );
+                AbbreviationExtractorApp app = new AbbreviationExtractorApp();
+                app.init(config);
+                app.run();
+                
+                ConfusionMatrix matrix = evaluator.evaluate(app.algorithm.getAbbreviations());
+                System.out.println("T-Test based: " + matrix);
             }
             
         } catch(Exception e) {
