@@ -16,7 +16,7 @@ import org.csclub.abbrev.impl.ConfigurationParameter;
  *
  * @author fedor
  */
-public class TTestBasedAlgorithm extends Algorithm {
+public class TTestBasedAlgorithm extends Algorithm <CorpusAbbreviation> {
     
     @ConfigurationParameter(name = "Threshold", defaultValue = "0.1")
     private double threshold;
@@ -24,7 +24,7 @@ public class TTestBasedAlgorithm extends Algorithm {
     private AbbreviationCounter abbrevCounter;
     private AbbreviationExtractor abrbevExtractor;
     
-    private List<Abbreviation> abbreviations = new ArrayList();
+    private List<CorpusAbbreviation> abbreviations = new ArrayList();
     
     
     public TTestBasedAlgorithm() {
@@ -36,7 +36,7 @@ public class TTestBasedAlgorithm extends Algorithm {
     public void run(Corpus corpus) {
         
         for (Sentence sentence : corpus.getSentences()) {
-            List<Abbreviation> sentenceAbbreviations = abrbevExtractor.extract(sentence);
+            List<CorpusAbbreviation> sentenceAbbreviations = abrbevExtractor.extract(sentence);
             abbrevCounter.onNewAbbreviations(sentenceAbbreviations);
         }
         
@@ -78,7 +78,7 @@ public class TTestBasedAlgorithm extends Algorithm {
         int nUnigrams = neibTokens.size();
         double periodProb = 1.0 * unigramCount.get(".") / nUnigrams;
         
-        for (Abbreviation abbrev : abbrevCounter.getSortedAbbreviations()) {
+        for (CorpusAbbreviation abbrev : (List<CorpusAbbreviation>)abbrevCounter.getSortedAbbreviations()) {
             String w = abbrev.getAbbrevText().substring(0, abbrev.getAbbrevText().length() - 1);
 
             if (bigramCount.containsKey(w + ".")) {
@@ -95,7 +95,7 @@ public class TTestBasedAlgorithm extends Algorithm {
     }
     
     @Override
-    public List<Abbreviation> getAbbreviations() {
+    public List<CorpusAbbreviation> getAbbreviations() {
         return abbreviations;
     }
 }

@@ -73,7 +73,7 @@ public class ConfusionMatrix {
     public String toString() {
         return String.format("p=%.3f, r=%.3f, f1=%.3f", getPrecision(), getRecall(), getF1Measure());
     }
-     
+
     public void print(String info) {
         System.out.println(info);
         System.out.println("\tPrecision =\t" + getPrecision());

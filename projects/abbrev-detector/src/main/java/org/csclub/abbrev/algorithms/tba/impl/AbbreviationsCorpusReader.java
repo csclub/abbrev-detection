@@ -2,12 +2,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.csclub.abbrev.connectors;
+package org.csclub.abbrev.algorithms.tba.impl;
 
 import java.util.List;
-import org.csclub.abbrev.Abbreviation;
 import org.csclub.abbrev.Corpus;
 import org.csclub.abbrev.Serializer;
+import org.csclub.abbrev.algorithms.tba.CorpusAbbreviation;
+import org.csclub.abbrev.connectors.CorpusReader;
 import org.csclub.abbrev.impl.ConfigurationParameter;
 import org.csclub.abbrev.impl.Configuration;
 
@@ -33,7 +34,7 @@ public class AbbreviationsCorpusReader extends CorpusReader {
     
     @Override
     public Corpus read() throws Exception {
-        List<Abbreviation> goldAbbreviations = Serializer.fromTextFile(fileName, fileEncoding);
-        return new Corpus(null, goldAbbreviations);
+        List<CorpusAbbreviation> goldAbbreviations = Serializer.fromTextFile(fileName, fileEncoding, CorpusAbbreviation.class);
+        return new Corpus(null, new AbbreviationsMetadata(goldAbbreviations));
     }
 }

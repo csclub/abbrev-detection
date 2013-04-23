@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import org.csclub.abbrev.Abbreviation;
 import org.csclub.abbrev.algorithms.tba.AbbreviationCounter;
+import org.csclub.abbrev.algorithms.tba.CorpusAbbreviation;
 
 /**
  * Trie implementation of the abbreviation counter component. Time of counting
@@ -14,11 +15,11 @@ import org.csclub.abbrev.algorithms.tba.AbbreviationCounter;
  *
  * @author Fedor Amosov
  */
-public class TrieAbbreviationCounter implements AbbreviationCounter {
+public class TrieAbbreviationCounter implements AbbreviationCounter<CorpusAbbreviation> {
 
     @Override
-    public void onNewAbbreviations(final List<Abbreviation> abbreviations) {
-        for (Abbreviation abbreviation : abbreviations) {
+    public void onNewAbbreviations(final List<CorpusAbbreviation> abbreviations) {
+        for (CorpusAbbreviation abbreviation : abbreviations) {
             abbrevCounter.add(abbreviation);
         }
     }
@@ -30,15 +31,15 @@ public class TrieAbbreviationCounter implements AbbreviationCounter {
 
     @Override
     public void print(PrintStream ps) {
-        for (Abbreviation abbreviation : sortedAbbreviations) {
-            ps.println(abbreviation.toString(-1));
+        for (CorpusAbbreviation abbreviation : sortedAbbreviations) {
+            ps.println(abbreviation.toString());
         }
         ps.println("-----");
         ps.println("Total number of unique abbreviations: " + sortedAbbreviations.size());
     }
     
     @Override
-    public List<Abbreviation> getSortedAbbreviations() {
+    public List<CorpusAbbreviation> getSortedAbbreviations() {
         if (sortedAbbreviations == null) {
             corpusProcessComplete();
         }
@@ -50,7 +51,7 @@ public class TrieAbbreviationCounter implements AbbreviationCounter {
     }
 
     private Trie abbrevCounter;   
-    private List<Abbreviation> sortedAbbreviations;
+    private List<CorpusAbbreviation> sortedAbbreviations;
 
     /**
      * Standard trie implementation with counters in nodes.
@@ -66,7 +67,7 @@ public class TrieAbbreviationCounter implements AbbreviationCounter {
          *
          * @param abbreviation is addition abbreviation.
          */
-        public void add(Abbreviation abbreviation) {
+        public void add(CorpusAbbreviation abbreviation) {
             Node cur = root;
             for (int i = 0; i < abbreviation.getAbbrevText().length(); ++i) {
                 if (!cur.next.containsKey(Character.valueOf(abbreviation.getAbbrevText().charAt(i)))) {
@@ -85,7 +86,7 @@ public class TrieAbbreviationCounter implements AbbreviationCounter {
          * @return list of abbreviations ordered by decreasing
          * of count.
          */
-        public List<Abbreviation> freqList() {
+        public List<CorpusAbbreviation> freqList() {
             tails = new ArrayList();
             for (int i = 0; i <= size; ++i) {
                 tails.add(new ArrayList());
@@ -96,11 +97,11 @@ public class TrieAbbreviationCounter implements AbbreviationCounter {
 
             dfs(root);
 
-            List<Abbreviation> result = new ArrayList();
+            List<CorpusAbbreviation> result = new ArrayList();
             for (int i = tails.size() - 1; i > 0; --i) {
                 for (List<Node> freqLevel : tails.get(i)) {
                     for (Node tail : freqLevel) {
-                        Abbreviation cur = new Abbreviation(tail.state, tail.contexts.size(), get(tail));
+                        CorpusAbbreviation cur = new CorpusAbbreviation(tail.state, tail.contexts.size(), get(tail));
                         cur.addAbbrevContexts(tail.contexts);
                         result.add(cur);
                     }
@@ -151,13 +152,13 @@ public class TrieAbbreviationCounter implements AbbreviationCounter {
             public Node prev;
             public Character edge;
             public List<String> contexts = new ArrayList();
-            public Abbreviation.AbbrevState state;
+            public CorpusAbbreviation.AbbrevState state;
             public int dist = 0;
 
             public Node() {
             }
 
-            public Node(Node prev, Character edge, Abbreviation.AbbrevState state) {
+            public Node(Node prev, Character edge, CorpusAbbreviation.AbbrevState state) {
                 this.prev = prev;
                 this.edge = edge;
                 this.dist = prev.dist + 1;

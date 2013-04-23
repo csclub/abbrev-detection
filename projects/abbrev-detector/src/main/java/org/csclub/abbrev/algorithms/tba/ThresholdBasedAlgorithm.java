@@ -40,15 +40,15 @@ public class ThresholdBasedAlgorithm extends Algorithm {
     public void run(Corpus corpus) {
         
         for (Sentence sentence : corpus.getSentences()) {
-            List<Abbreviation> sentenceAbbreviations = abrbevExtractor.extract(sentence);
+            List<CorpusAbbreviation> sentenceAbbreviations = abrbevExtractor.extract(sentence);
             abbrevCounter.onNewAbbreviations(sentenceAbbreviations);
         }
         
         abbrevCounter.corpusProcessComplete();
-        List<Abbreviation> allAbbreviations = abbrevCounter.getSortedAbbreviations();
+        List<CorpusAbbreviation> allAbbreviations = abbrevCounter.getSortedAbbreviations();
         
         abbreviations = new ArrayList<> ();
-        for (Abbreviation abbrev : allAbbreviations) {
+        for (CorpusAbbreviation abbrev : allAbbreviations) {
             if (abbrev.getAbbrevCount() >= threshold) {
                 abbreviations.add(abbrev);
             } else {

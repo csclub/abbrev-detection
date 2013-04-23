@@ -12,6 +12,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -26,56 +28,39 @@ import java.util.Scanner;
  */
 public class Serializer {
     
-    public static void toTextFile(String fileName, String encoding, List<Abbreviation> abbreviations, int maxContextsCount) throws IOException {
+    /** each line contains single element from list  <code>abbreviations</code>*/
+    public static <E extends Abbreviation> void toTextFile(final String fileName, final String encoding, final List<E> abbreviations) throws IOException {
         Path filePath = Paths.get(fileName);
         try (BufferedWriter writer = Files.newBufferedWriter(filePath, Charset.forName(encoding))) {
-            for(Abbreviation abbrev : abbreviations){
-                writer.write(abbrev.toString(maxContextsCount));
+            for(E abbrev : abbreviations){
+                writer.write(abbrev.toString());
                 writer.newLine();
             }
         }
     }
     
-    public static void toBinaryFile(String fileName, List<Abbreviation> abbreviations) throws IOException {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(fileName)))) {
-            oos.writeObject(abbreviations);
-        }
-    }
-    
-    public static List<Abbreviation> fromTextFile(String fileName, String encoding) throws IOException {
-        List<Abbreviation> result = new ArrayList();
+    public static <E extends Abbreviation> List<E> fromTextFile(final String fileName, final String encoding, Class<E> klass) throws IOException, NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        Method factoryMethod = klass.getMethod("fromString", String.class);
+        List<E> abbreviations = new ArrayList();
         try (Scanner reader = new Scanner(new FileInputStream(fileName), encoding)) {
             while (reader.hasNextLine()) {
-            
-                String s = reader.next();
-                Abbreviation.AbbrevState state = Abbreviation.AbbrevState.Unknown;
-                if (s.equals("+")) {
-                    state = Abbreviation.AbbrevState.True;
-                }
-                if (s.equals("-")) {
-                    state = Abbreviation.AbbrevState.False;
-                }
-                
-                int count = reader.nextInt();
-                String text = reader.next();
-                
-                Abbreviation cur = new Abbreviation(state, count, text); 
-                                    
-                String contextLine = reader.nextLine().trim();
-                String[] contexts = contextLine.substring(1, contextLine.length() - 1).split("', '");
-                for (int i = 0; i < contexts.length; ++i) {
-                    cur.addAbbrevContext(contexts[i]);
-                }
-                result.add(cur);
+                String str = reader.nextLine();
+                Object abbrev = factoryMethod.invoke(null, str);
+                abbreviations.add((E)abbrev);
             }
         }
-        return result;
-    }
-    
-    public static List<Abbreviation> fromBinaryFile(String fileName) throws IOException, ClassNotFoundException {
-        ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(fileName)));
-        List<Abbreviation> abbreviations = (List<Abbreviation>)ois.readObject();
         return abbreviations;
     }
     
+    public static void toBinaryFile(final String fileName, final List<? extends Abbreviation> abbrevs) throws IOException {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(fileName)))) {
+            oos.writeObject(abbrevs);
+        }
+    }
+    
+    public static List<? extends Abbreviation> fromBinaryFile(final String fileName) throws IOException, ClassNotFoundException {
+        ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(fileName)));
+        Object obj = (List<Abbreviation>)ois.readObject();
+        return (List<? extends Abbreviation>)obj;
+    }
 }

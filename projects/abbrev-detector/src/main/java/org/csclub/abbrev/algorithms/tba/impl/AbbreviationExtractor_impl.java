@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.csclub.abbrev.Abbreviation;
 import org.csclub.abbrev.AbbreviationUtils;
 import org.csclub.abbrev.Sentence;
 import org.csclub.abbrev.algorithms.tba.AbbreviationExtractor;
+import org.csclub.abbrev.algorithms.tba.CorpusAbbreviation;
 
 /**
  *
@@ -16,7 +16,7 @@ import org.csclub.abbrev.algorithms.tba.AbbreviationExtractor;
  * Return tokens that ends with period and are located in the middle of the sentence.
  * Do not modify it. Rather, make a new class with meaningful name and some logic into it.
  */
-public class AbbreviationExtractor_impl implements AbbreviationExtractor {
+public class AbbreviationExtractor_impl implements AbbreviationExtractor <CorpusAbbreviation> {
     
     private  Pattern simpleAbbrevPattern;
     
@@ -30,7 +30,7 @@ public class AbbreviationExtractor_impl implements AbbreviationExtractor {
      * @return List of candidate abbreviations
      */
     @Override
-    public List<Abbreviation> extract(Sentence sentence) {
+    public List<CorpusAbbreviation> extract(Sentence sentence) {
         List<String> tokens;
         if (null != sentence.getTokens()) {
             tokens = sentence.getTokens();
@@ -38,7 +38,7 @@ public class AbbreviationExtractor_impl implements AbbreviationExtractor {
             tokens = AbbreviationUtils.tokenize(sentence.getSentence());
         }
         
-        List<Abbreviation> abbreviations = new ArrayList();
+        List<CorpusAbbreviation> abbreviations = new ArrayList();
         for (int i = 0; i < tokens.size() - 1; i++) {
             if (tokens.get(i).endsWith(".")) {
                 // get abbreviation
@@ -46,7 +46,7 @@ public class AbbreviationExtractor_impl implements AbbreviationExtractor {
                 if (null == abbrevText) {
                     continue;
                 }
-                Abbreviation abbrev = new Abbreviation(tokens.get(i));
+                CorpusAbbreviation abbrev = new CorpusAbbreviation(tokens.get(i));
                 // get abbreviation context
                 if (i == 0 && tokens.size() >= 1) {
                     abbrev.addAbbrevContext(String.format("%s %s", tokens.get(i), tokens.get(1)));

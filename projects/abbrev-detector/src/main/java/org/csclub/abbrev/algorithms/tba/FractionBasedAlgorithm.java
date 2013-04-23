@@ -9,20 +9,22 @@ import java.util.List;
 import org.csclub.abbrev.Abbreviation;
 import org.csclub.abbrev.Corpus;
 import org.csclub.abbrev.algorithms.Algorithm;
+import org.csclub.abbrev.algorithms.tba.impl.AbbreviationsMetadata;
 import org.csclub.abbrev.algorithms.tba.impl.Delimiter;
 
 /**
  *
  * @author Fedor Amosov
  */
-public class FractionBasedAlgorithm extends Algorithm {
+public class FractionBasedAlgorithm extends Algorithm <CorpusAbbreviation> {
     
-    private List<Abbreviation> goldAbbreviations;
-    private List<Abbreviation> abbreviations;
+    private List<CorpusAbbreviation> goldAbbreviations;
+    private List<CorpusAbbreviation> abbreviations;
 
     @Override
     public void run(Corpus corpus) {
-        goldAbbreviations = corpus.getAbbreviations();
+        AbbreviationsMetadata metadata = (AbbreviationsMetadata)corpus.getMetadata();
+        goldAbbreviations = metadata.getAbbreviations();
         
         Delimiter.setShareOfAbbreviations(goldAbbreviations);
         Delimiter.shareOfAbbreviations = Math.min(Delimiter.shareOfAbbreviations, 1.0);
@@ -34,5 +36,5 @@ public class FractionBasedAlgorithm extends Algorithm {
     }
 
     @Override
-    public List<Abbreviation> getAbbreviations() { return abbreviations; }
+    public List<CorpusAbbreviation> getAbbreviations() { return abbreviations; }
 }

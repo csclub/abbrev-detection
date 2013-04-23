@@ -16,10 +16,10 @@ import org.csclub.abbrev.impl.Component;
  * the corpus.
  * 
  */
-public abstract class Algorithm extends Component {
+public abstract class Algorithm <E extends Abbreviation> extends Component {
     /** */
     public abstract void run(Corpus corpus);
     
     /** get results (dictionary of abbreviations) */
-    public abstract List<Abbreviation> getAbbreviations();
+    public abstract List<E> getAbbreviations();
 }

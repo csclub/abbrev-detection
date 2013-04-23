@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import org.csclub.abbrev.algorithms.Algorithm;
+import org.csclub.abbrev.algorithms.tba.CorpusAbbreviation;
 import org.csclub.abbrev.algorithms.tba.impl.Delimiter;
 import org.csclub.abbrev.connectors.CorpusReader;
 import org.csclub.abbrev.evaluation.AbbreviationEvaluator;
@@ -63,6 +64,8 @@ public class AbbreviationExtractorApp  extends Component {
     }
     
     public ConfusionMatrix delimiterAnalysis(final List<Abbreviation> goldAbbreviations) {
+        return null;
+        /*
         Delimiter.setShareOfAbbreviations(goldAbbreviations);
         
         List<Abbreviation> trueAbbreviations = new ArrayList();
@@ -86,9 +89,12 @@ public class AbbreviationExtractorApp  extends Component {
         
         AbbreviationEvaluator evaluator = new AbbreviationEvaluator(trueAbbreviations);
         return evaluator.evaluate(Delimiter.probablyAbbreviations(goldAbbreviations));
+        * */
     }
     
     public ConfusionMatrix constLimitAnalysis(final List<Abbreviation> goldAbbreviations, int lim) {
+        return null;
+        /*
         List<Abbreviation> trueAbbreviations = new ArrayList();
         List<Abbreviation> positiveAbbreviations = new ArrayList();
         
@@ -111,6 +117,7 @@ public class AbbreviationExtractorApp  extends Component {
         
         AbbreviationEvaluator evaluator = new AbbreviationEvaluator(trueAbbreviations);
         return evaluator.evaluate(positiveAbbreviations);
+        * */
     }
     
     public void collate(String fileName, String encoding) throws FileNotFoundException, UnsupportedEncodingException, IOException {
@@ -131,10 +138,11 @@ public class AbbreviationExtractorApp  extends Component {
         // threshold based
         try {
             
-            List<Abbreviation> goldAbbreviations = Serializer.fromTextFile
+            List<CorpusAbbreviation> goldAbbreviations = Serializer.fromTextFile
                     (
                         Paths.get(System.getProperty("user.dir"), "../../resources/abbreviations/abbrev-gold.txt").toString(), 
-                        "UTF-8"
+                        "UTF-8",
+                        CorpusAbbreviation.class
                     );
             AbbreviationEvaluator evaluator = new AbbreviationEvaluator(goldAbbreviations);
             
@@ -163,7 +171,7 @@ public class AbbreviationExtractorApp  extends Component {
                 String corpusFile = Paths.get(System.getProperty("user.dir"), "../../resources/abbreviations/abbrev-gold.txt").toString();
                 Configuration config = new Configuration( new String [] 
                                                 {   
-                                                    "ConnectorClass", "org.csclub.abbrev.connectors.AbbreviationsCorpusReader",
+                                                    "ConnectorClass", "org.csclub.abbrev.algorithms.tba.impl.AbbreviationsCorpusReader",
                                                     "Connector.FileName", corpusFile,
                                                     "Connector.FileEncoding", "UTF-8",
 

@@ -9,16 +9,17 @@ import java.util.List;
 public class Corpus {
     
     private List<Sentence> sentences;
-    private List<Abbreviation> abbreviations;
+    private CorpusMetadata metadata;
+ 
     
-    public Corpus(List<Sentence> sentences, List<Abbreviation> abbreviations) {
+    public Corpus(List<Sentence> sentences, CorpusMetadata metadata) {
         setSentences(sentences);
-        setAbbreviations(abbreviations);
+        setMetadata(metadata);
     }
     
     public List<Sentence> getSentences() { return sentences; }
-    public List<Abbreviation> getAbbreviations() { return abbreviations; }
+    public CorpusMetadata getMetadata() { return metadata; }
     
     public final void setSentences(List<Sentence> sentences) { this.sentences = sentences; }
-    public final void setAbbreviations(List<Abbreviation> abbreviations) { this.abbreviations = abbreviations; }
+    public final void setMetadata(CorpusMetadata metadata) { this.metadata = metadata; }
 }

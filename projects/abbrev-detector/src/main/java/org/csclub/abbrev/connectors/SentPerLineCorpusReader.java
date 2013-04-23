@@ -2,11 +2,11 @@ package org.csclub.abbrev.connectors;
 
 import java.io.FileInputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 import org.csclub.abbrev.Corpus;
+import org.csclub.abbrev.CorpusMetadata;
 import org.csclub.abbrev.Sentence;
 import org.csclub.abbrev.impl.ConfigurationParameter;
 import org.csclub.abbrev.impl.Configuration;
@@ -40,7 +40,7 @@ public class SentPerLineCorpusReader extends CorpusReader {
         while (lineIterator.hasNext()) {
             sentences.add(new Sentence(lineIterator.nextLine()));
         }
-        return new Corpus(sentences, null);
+        return new Corpus(sentences, (CorpusMetadata)null);
     }
      
 }

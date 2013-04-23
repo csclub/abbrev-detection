@@ -12,6 +12,6 @@ import org.csclub.abbrev.Sentence;
  *
  * @author serebrya
  */
-public interface AbbreviationExtractor {
-    public List<Abbreviation> extract(Sentence sentence);
+public interface AbbreviationExtractor<E extends Abbreviation> {
+    public List<E> extract(Sentence sentence);
 }

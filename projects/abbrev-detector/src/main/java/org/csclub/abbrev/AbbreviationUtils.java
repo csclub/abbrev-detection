@@ -29,9 +29,9 @@ public class AbbreviationUtils {
         return constructor.newInstance();
     }
     
-    public static void print(List<Abbreviation> abbreviations, int maxContextsCount) {
-        for(Abbreviation abbrev : abbreviations){
-            System.out.println(abbrev.toString(maxContextsCount));
+    public static <E extends Abbreviation> void print(List<E> abbreviations) {
+        for(E abbrev : abbreviations){
+            System.out.println(abbrev.toString());
         }
     }
 }

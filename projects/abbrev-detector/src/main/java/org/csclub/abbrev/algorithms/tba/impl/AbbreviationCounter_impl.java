@@ -14,8 +14,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import org.csclub.abbrev.Abbreviation;
 import org.csclub.abbrev.algorithms.tba.AbbreviationCounter;
+import org.csclub.abbrev.algorithms.tba.CorpusAbbreviation;
 
 /**
  *
@@ -23,23 +23,23 @@ import org.csclub.abbrev.algorithms.tba.AbbreviationCounter;
  * A naive implementation of the abbreviation counter component.
  * Do not modify it. Rather, make a new class with meaningful name and some logic into it.
  */
-public class AbbreviationCounter_impl implements AbbreviationCounter {
+public class AbbreviationCounter_impl implements AbbreviationCounter <CorpusAbbreviation> {
 
-    private Map<String, Abbreviation> abbrevCounters;
-    private List<Pair<String, Abbreviation>> sortedAbbreviations;
+    private Map<String, CorpusAbbreviation> abbrevCounters;
+    private List<Pair<String, CorpusAbbreviation>> sortedAbbreviations;
     
     public AbbreviationCounter_impl() {
-        abbrevCounters = new HashMap<String, Abbreviation>();
+        abbrevCounters = new HashMap<>();
     }
     
     @Override
-    public void onNewAbbreviations(final List<Abbreviation> abbreviations) {
-        for(Abbreviation abbreviation : abbreviations) {
+    public void onNewAbbreviations(final List<CorpusAbbreviation> abbreviations) {
+        for(CorpusAbbreviation abbreviation : abbreviations) {
             String abbrevText = abbreviation.getAbbrevText();
             if (false == abbrevCounters.containsKey(abbrevText)) {
                 abbrevCounters.put(abbrevText, abbreviation);
             } else {
-                Abbreviation existingAbbrev = abbrevCounters.get(abbrevText);
+                CorpusAbbreviation existingAbbrev = abbrevCounters.get(abbrevText);
                 existingAbbrev.incrementCounter();
                 for(String abbrevContext : abbreviation.getAbbrevContexts()) {
                     existingAbbrev.addAbbrevContext(abbrevContext);
@@ -50,12 +50,13 @@ public class AbbreviationCounter_impl implements AbbreviationCounter {
     
     @Override
     public void corpusProcessComplete() {
-        sortedAbbreviations = new ArrayList<Pair<String, Abbreviation>> ();
-        for (Entry<String, Abbreviation> entry : abbrevCounters.entrySet()) {
-            sortedAbbreviations.add(new ImmutablePair<String, Abbreviation> (entry.getKey(), entry.getValue()));
+        sortedAbbreviations = new ArrayList<> ();
+        for (Entry<String, CorpusAbbreviation> entry : abbrevCounters.entrySet()) {
+            sortedAbbreviations.add(new ImmutablePair<> (entry.getKey(), entry.getValue()));
         }
-        Collections.sort(sortedAbbreviations, new Comparator<Pair<String, Abbreviation>>() {
-            public int compare(Pair<String, Abbreviation> o1, Pair<String, Abbreviation> o2) {
+        Collections.sort(sortedAbbreviations, new Comparator<Pair<String, CorpusAbbreviation>>() {
+            @Override
+            public int compare(Pair<String, CorpusAbbreviation> o1, Pair<String, CorpusAbbreviation> o2) {
                 if (o1.getValue().getAbbrevCount() < o2.getValue().getAbbrevCount() ) {
                     return 1;
                 } if (o1.getValue().getAbbrevCount() > o2.getValue().getAbbrevCount() ) {
@@ -69,8 +70,8 @@ public class AbbreviationCounter_impl implements AbbreviationCounter {
     
     @Override
     public void print(PrintStream ps) {
-        for (Pair<String, Abbreviation> abbreviation : sortedAbbreviations) {
-            ps.println(abbreviation.getValue().toString(-1));
+        for (Pair<String, CorpusAbbreviation> abbreviation : sortedAbbreviations) {
+            ps.println(abbreviation.getValue().toString());
         }
         System.out.println("-----");
         System.out.println("Total number of unique abbreviations: " + sortedAbbreviations.size());
@@ -78,14 +79,14 @@ public class AbbreviationCounter_impl implements AbbreviationCounter {
     }
     
     @Override
-    public List<Abbreviation> getSortedAbbreviations() {
+    public List<CorpusAbbreviation> getSortedAbbreviations() {
         if (sortedAbbreviations == null) {
             corpusProcessComplete();
         }
         
-        List<Abbreviation> result = new ArrayList<Abbreviation>();
+        List<CorpusAbbreviation> result = new ArrayList<>();
         
-        for (Pair<String, Abbreviation> abbreviation : sortedAbbreviations) {
+        for (Pair<String, CorpusAbbreviation> abbreviation : sortedAbbreviations) {
             result.add(abbreviation.getValue());
         }
         

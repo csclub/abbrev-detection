@@ -13,24 +13,24 @@ import org.csclub.abbrev.Abbreviation;
  *
  * @author Sergey Serebryakov
  */
-public class AbbreviationEvaluator extends Evaluator{
+public class AbbreviationEvaluator <E extends Abbreviation> extends Evaluator{
     
     private Set<String> goldAbbreviations;
     
-    public AbbreviationEvaluator(List<Abbreviation> abbreviations) {
+    public AbbreviationEvaluator(List<E> abbreviations) {
         goldAbbreviations = getTextForms(abbreviations, true);
     }
     
-    public ConfusionMatrix evaluate(List<Abbreviation> abbreviations) {
+    public ConfusionMatrix evaluate(List<E> abbreviations) {
         Set<String> actualAbbreviations = getTextForms(abbreviations, false);
         return evaluate(goldAbbreviations, actualAbbreviations);
     }
     
-    private Set<String> getTextForms(List<Abbreviation> abbreviations, boolean goldStandard) {
+    private Set<String> getTextForms(List<E> abbreviations, boolean goldStandard) {
         Set<String> textForms = Sets.newHashSet();
         for (Abbreviation abbreviation: abbreviations) {
             if (goldStandard) {
-                if (abbreviation.getAbbrevState() == Abbreviation.AbbrevState.True) {
+                if (abbreviation.isValid()) {
                     textForms.add(abbreviation.getAbbrevText());
                 }
             } else {

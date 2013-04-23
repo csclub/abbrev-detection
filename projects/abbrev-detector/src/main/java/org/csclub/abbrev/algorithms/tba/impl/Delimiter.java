@@ -3,6 +3,7 @@ package org.csclub.abbrev.algorithms.tba.impl;
 import java.util.ArrayList;
 import java.util.List;
 import org.csclub.abbrev.Abbreviation;
+import org.csclub.abbrev.algorithms.tba.CorpusAbbreviation;
 
 /**
  *
@@ -40,10 +41,10 @@ public class Delimiter {
      * @param goldAbbreviations is list of sorted by dectreasing of count and marked 
      * candidates.
      */
-    public static void setShareOfAbbreviations(List<Abbreviation> goldAbbreviations) {
+    public static void setShareOfAbbreviations(List<CorpusAbbreviation> goldAbbreviations) {
         double[] f = new double[goldAbbreviations.size()];
         for (int i = 0; i < f.length; ++i) {
-            switch (((Abbreviation)(goldAbbreviations.get(i))).getAbbrevState().toString()) {
+            switch (((CorpusAbbreviation)(goldAbbreviations.get(i))).getAbbrevState().toString()) {
                 case "+":
                     f[i] = 1.0;
                     
