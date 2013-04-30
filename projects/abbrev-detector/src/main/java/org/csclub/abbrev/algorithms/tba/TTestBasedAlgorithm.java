@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.csclub.abbrev.Abbreviation;
+import org.csclub.abbrev.AbbreviationUtils;
 import org.csclub.abbrev.Corpus;
 import org.csclub.abbrev.Sentence;
 import org.csclub.abbrev.algorithms.Algorithm;
@@ -14,6 +14,10 @@ import org.csclub.abbrev.impl.ConfigurationParameter;
 
 /**
  *
+ * This is realisation of t-test. It is discussed in the article of Christopher 
+ * Manning & Hinrich Schütze "Foundations of Statistical Natural Language 
+ * Processing", section 5.3.1
+ * 
  * @author fedor
  */
 public class TTestBasedAlgorithm extends Algorithm <CorpusAbbreviation> {
@@ -40,20 +44,7 @@ public class TTestBasedAlgorithm extends Algorithm <CorpusAbbreviation> {
             abbrevCounter.onNewAbbreviations(sentenceAbbreviations);
         }
         
-        List<String> neibTokens = new ArrayList();
-        for (Sentence sentence : corpus.getSentences()) {
-            for (String token : sentence.getTokens()) { 
-                token = token.replaceAll("\\.+", ".");
-                if (token.endsWith(".")) {
-                    if (token.length() > 1) {
-                        neibTokens.add(token.substring(0, token.length() - 1));
-                    }
-                    neibTokens.add(".");
-                } else {
-                    neibTokens.add(token);
-                }
-            }
-        }
+        List<String> neibTokens = AbbreviationUtils.tokenize(corpus);
         
         Map<String, Integer> unigramCount = new HashMap();
         for (String token : neibTokens) {
