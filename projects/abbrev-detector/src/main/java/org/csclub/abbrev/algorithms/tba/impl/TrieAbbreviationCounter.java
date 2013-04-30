@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
-import org.csclub.abbrev.Abbreviation;
 import org.csclub.abbrev.algorithms.tba.AbbreviationCounter;
 import org.csclub.abbrev.algorithms.tba.CorpusAbbreviation;
 
