@@ -71,7 +71,7 @@ public class ConfusionMatrix {
     
     @Override
     public String toString() {
-        return String.format("p=%.3f, r=%.3f, f1=%.3f", getPrecision(), getRecall(), getF1Measure());
+        return String.format("p = %.3f, r = %.3f, f1 = %.3f", getPrecision(), getRecall(), getF1Measure());
     }
 
     public void print(String info) {
