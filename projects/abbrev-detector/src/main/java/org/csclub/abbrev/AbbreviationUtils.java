@@ -11,6 +11,8 @@ import java.util.List;
  */
 public class AbbreviationUtils {
 
+    public static String PERIOD = ".";
+    
     public static List<String> tokenize(String sentence) {
         String[] tempTokens = sentence.split("[\\s()\"«»\\[\\]?:,;!]");
         List<String> tokens = new ArrayList();
