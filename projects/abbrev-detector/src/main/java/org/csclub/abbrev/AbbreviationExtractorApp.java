@@ -92,6 +92,7 @@ public class AbbreviationExtractorApp  extends Component {
                 System.out.println("Threshold based: " + matrix);
             }
             
+            //fraction based
             {
                 String corpusFile = Paths.get(System.getProperty("user.dir"), "../../resources/abbreviations/abbrev-gold.txt").toString();
                 Configuration config = new Configuration( new String [] 
@@ -111,7 +112,7 @@ public class AbbreviationExtractorApp  extends Component {
                 System.out.println("Fraction based: " + matrix);
             }
             
-            
+            //t-test based
             {
                 String corpusFile = Paths.get(System.getProperty("user.dir"), "../../datasets/opencorpora/opencorpora.sent.train.ru").toString();
                 Configuration config = new Configuration(new String [] 
@@ -130,6 +131,7 @@ public class AbbreviationExtractorApp  extends Component {
                 System.out.println("T-Test based: " + matrix);
             }
             
+            //chi-square test based
             {
                 String corpusFile = Paths.get(System.getProperty("user.dir"), "../../datasets/opencorpora/opencorpora.sent.train.ru").toString();
                 Configuration config = new Configuration(new String [] 
@@ -146,6 +148,25 @@ public class AbbreviationExtractorApp  extends Component {
                 
                 ConfusionMatrix matrix = evaluator.evaluate(app.algorithm.getAbbreviations());
                 System.out.println("Chi sqare test based: " + matrix);
+            }
+            
+            //likelihood ratios based
+            {
+                String corpusFile = Paths.get(System.getProperty("user.dir"), "../../datasets/opencorpora/opencorpora.sent.train.ru").toString();
+                Configuration config = new Configuration(new String [] 
+                                                {   
+                                                    "ConnectorClass", "org.csclub.abbrev.connectors.SentPerLineCorpusReader",
+                                                    "Connector.FileName", corpusFile,
+                                                    "Connector.FileEncoding", "UTF-8",
+                                                    "AlgorithmClass", "org.csclub.abbrev.algorithms.tba.LikelihoodRatiosBasedAlgorithm",
+                                                } 
+                                             );
+                AbbreviationExtractorApp app = new AbbreviationExtractorApp();
+                app.init(config);
+                app.run();
+                
+                ConfusionMatrix matrix = evaluator.evaluate(app.algorithm.getAbbreviations());
+                System.out.println("Likelihood Ratios based: " + matrix);
             }
             
         } catch(Exception e) {
