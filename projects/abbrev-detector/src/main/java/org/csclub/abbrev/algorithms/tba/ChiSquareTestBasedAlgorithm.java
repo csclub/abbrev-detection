@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.csclub.abbrev.Abbreviation;
 import org.csclub.abbrev.AbbreviationUtils;
 import org.csclub.abbrev.Corpus;
 import org.csclub.abbrev.Sentence;
@@ -23,7 +24,7 @@ import org.csclub.abbrev.impl.ConfigurationParameter;
  */
 public class ChiSquareTestBasedAlgorithm extends Algorithm<CorpusAbbreviation> {
     
-    @ConfigurationParameter(name = "Threshold", defaultValue = "5.475")
+    @ConfigurationParameter(name = "Threshold", defaultValue = "6.5")
     private double threshold;
 
     private AbbreviationCounter abbrevCounter;
@@ -47,10 +48,11 @@ public class ChiSquareTestBasedAlgorithm extends Algorithm<CorpusAbbreviation> {
         }
         
         List<String> neibTokens = AbbreviationUtils.tokenize(corpus);
+        List<Abbreviation> sortedAbbreviations = abbrevCounter.getSortedAbbreviations();
         
         List<TwoByTwoTable> tables = TwoByTwoTable.getAbbreviationTables(
             neibTokens, 
-            abbrevCounter.getSortedAbbreviations()
+            sortedAbbreviations
         );
         
         Set<String> abbrevTexts = new HashSet();
@@ -69,13 +71,13 @@ public class ChiSquareTestBasedAlgorithm extends Algorithm<CorpusAbbreviation> {
             chi2 /= (c11 + c21);
             
             if (chi2 > threshold) {
-                abbrevTexts.add(table.getFirst() + ".");
+                abbrevTexts.add(table.getFirstWord() + AbbreviationUtils.PERIOD);
             }
         }
         
-        for (CorpusAbbreviation abbrev : (List<CorpusAbbreviation>)abbrevCounter.getSortedAbbreviations()) {
+        for (Abbreviation abbrev : sortedAbbreviations) {
             if (abbrevTexts.contains(abbrev.getAbbrevText())) {
-                abbreviations.add(abbrev);
+                abbreviations.add((CorpusAbbreviation)abbrev);
             }
         }
     }
