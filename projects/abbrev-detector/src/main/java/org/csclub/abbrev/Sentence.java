@@ -12,7 +12,7 @@ import java.util.List;
  * Generally, following three possibilities are valid:
  *  (1) sentence is null, tokens array is not null;
  *  (2) sentence is not null, tokens array is null;
- *  (3) sentence is not null, tokens array is not null
+ *  (3) sentence is not null, tokens array is not null;
  */
 public class Sentence {
     
