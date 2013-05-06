@@ -16,15 +16,15 @@ import org.csclub.abbrev.impl.ConfigurationParameter;
 
 /**
  *
- * This is realisation of Pearson’s chi-square test. It is discussed in the 
+ * This is realisation of Likelihood Ratios. It is discussed in the 
  * article of Christopher Manning & Hinrich Schütze "Foundations of Statistical 
- * Natural Language Processing", section 5.3.3
+ * Natural Language Processing", section 5.3.4
  * 
- * @author Fedor Amosov 
+ * @author Fedor Amosov
  */
-public class ChiSquareTestBasedAlgorithm extends Algorithm<CorpusAbbreviation> {
+public class LikelihoodRatiosBasedAlgorithm extends Algorithm {
     
-    @ConfigurationParameter(name = "Threshold", defaultValue = "6.5")
+    @ConfigurationParameter(name = "Threshold", defaultValue = "0.095")
     private double threshold;
 
     private AbbreviationCounter abbrevCounter;
@@ -32,8 +32,18 @@ public class ChiSquareTestBasedAlgorithm extends Algorithm<CorpusAbbreviation> {
     
     private List<CorpusAbbreviation> abbreviations = new ArrayList();
     
+    private static double EPS = 0.000001;
     
-    public ChiSquareTestBasedAlgorithm() {
+    private double f(int k, int n, double x) { 
+        if (Math.abs(1 - x) < EPS) {
+            // (n - k) * Math.log(1 - x) = 0, because in this case, n = k, and 
+            // lim_{x->0} x ln(x) = 0
+            return k * Math.log(x); 
+        }
+        return k * Math.log(x) + (n - k) * Math.log(1 - x);
+    }
+    
+    public LikelihoodRatiosBasedAlgorithm() {
         abbrevCounter = new TrieAbbreviationCounter();
         abrbevExtractor = new AbbreviationExtractor_impl();
     }
@@ -57,20 +67,36 @@ public class ChiSquareTestBasedAlgorithm extends Algorithm<CorpusAbbreviation> {
         
         Set<String> abbrevTexts = new HashSet();
         for (TwoByTwoTable table : tables) {
-            int c11 = table.get(1, 1);
-            int c12 = table.get(1, 2);
-            int c21 = table.get(2, 1);
-            int c22 = table.get(2, 2);
+            int cWP = table.get(1, 1);
+            int cWnotP = table.get(1, 2);
             
-            double chi2 = neibTokens.size();
-            chi2 /= (c12 + c22);
-            chi2 /= (c11 + c12);
-            chi2 *= (c11 * c22 - c12 * c21);
-            chi2 /= (c21 + c22);
-            chi2 *= (c11 * c22 - c12 * c21);
-            chi2 /= (c11 + c21);
+            if (cWP == 0) {
+                continue;
+            }
             
-            if (chi2 > threshold) {
+            int n = neibTokens.size();    
+            int cW = table.getFirstWordCount();
+            int cP = table.getSecondWordCount();
+            
+            double p = (double)cP / n;
+            double p1 = (double)cWP / cW;
+            double p2 = (double)(cP - cWP) / (n - cW);
+            
+            double logLambda = f(cWP, cW, p)  + f(cP - cWP, n - cW, p)
+                             - f(cWP, cW, p1) - f(cP - cWP, n - cW, p2);
+            
+            double s1 = Math.exp(cWP);
+            if (cWnotP > 0) {
+                s1 = Math.exp((double)cWP / cWnotP);
+            }
+            
+            double s2 = (double)(cWP - cWnotP) / (cWP + cWnotP);
+            
+            double s3 = Math.exp(-table.getFirstWord().length());
+            
+            double logLambdaScaled = -2  * s1 * s2 * s3 * logLambda;
+
+            if (logLambdaScaled > threshold) {
                 abbrevTexts.add(table.getFirstWord() + AbbreviationUtils.PERIOD);
             }
         }

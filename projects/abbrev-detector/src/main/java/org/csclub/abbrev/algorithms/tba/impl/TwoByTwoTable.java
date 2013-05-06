@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import org.csclub.abbrev.Abbreviation;
+import org.csclub.abbrev.AbbreviationUtils;
 
 /**
  *
@@ -15,16 +16,14 @@ import org.csclub.abbrev.Abbreviation;
  * @author Fedor Amosov
  */
 public class TwoByTwoTable {
-    
-    private static final String PERIOD = ".";
-    
-    private String w1, w2;
-    private int[][] count;
+
+    private String word1, word2;
+    private int[][] table;
     
     public TwoByTwoTable(String w1, String w2) {
-        this.w1 = w1;
-        this.w2 = w2;
-        count = new int[2][2];
+        this.word1 = w1;
+        this.word2 = w2;
+        table = new int[2][2];
     }
     
     public TwoByTwoTable add(int i, int j) {
@@ -33,33 +32,40 @@ public class TwoByTwoTable {
     
     public TwoByTwoTable add(int i, int j, int count) {
         if (1 <= i && i <= 2 && 1 <= j && j <= 2) {
-            this.count[i - 1][j - 1] += count;
+            this.table[i - 1][j - 1] += count;
         }
         return this;
     }
     
     public int get(int i, int j) {
         if (1 <= i && i <= 2 && 1 <= j && j <= 2) {
-            return count[i - 1][j - 1];
+            return table[i - 1][j - 1];
         }
         return 0;
     }
     
-    public String getFirst() {
-        return w1;
+    public String getFirstWord() {
+        return word1;
     }
     
-    public String getSecond() {
-        return w2;
+    public String getSecondWord() {
+        return word2;
+    }
+    
+    public int getFirstWordCount() {
+        return table[0][0] + table[0][1];
+    }
+    
+    public int getSecondWordCount() {
+        return table[0][0] + table[1][0];
     }
     
     @Override
     public String toString() {
-        return "\t" + this.w2 + "\t!" + this.w2 + "\n" 
-                + this.w1 + "\t" + count[0][0] + "\t" + count[0][1] + "\n"
-                + "!" + this.w1 + "\t" + count[1][0] + "\t" + count[1][1] + "\n"; 
+        return "\t" + this.word2 + "\t!" + this.word2 + "\n" 
+                + this.word1 + "\t" + table[0][0] + "\t" + table[0][1] + "\n"
+                + "!" + this.word1 + "\t" + table[1][0] + "\t" + table[1][1] + "\n"; 
     }
-    
     
     /**
      *
@@ -84,8 +90,8 @@ public class TwoByTwoTable {
             String w = abbreviation.getAbbrevText();
             w = w.substring(0, w.length() - 1);
             
-            tables.put(w, new TwoByTwoTable(w, "."));
-            substract.put(w, new TwoByTwoTable(w, "."));
+            tables.put(w, new TwoByTwoTable(w, AbbreviationUtils.PERIOD));
+            substract.put(w, new TwoByTwoTable(w, AbbreviationUtils.PERIOD));
         }
         
         int add21 = 0;
@@ -94,7 +100,7 @@ public class TwoByTwoTable {
             String w1 = corpus.get(i);
             String w2 = corpus.get(i + 1);
             
-            if (!w2.equals(PERIOD)) {
+            if (!w2.equals(AbbreviationUtils.PERIOD)) {
                 ++add22;
                 if (tables.containsKey(w1)) {
                     tables.get(w1).add(1, 2);
@@ -107,14 +113,13 @@ public class TwoByTwoTable {
                     substract.get(w1).add(2, 1);
                 }
             }
-            
         }
         
         List<TwoByTwoTable> result = new ArrayList();
         for (Entry<String, TwoByTwoTable> entry : tables.entrySet()) {
-            add21 -= substract.get(entry.getKey()).get(2, 1);
-            add22 -= substract.get(entry.getKey()).get(2, 2);
-            result.add(entry.getValue().add(2, 1, add21).add(2, 2, add22));
+            int curAdd21 = add21 - substract.get(entry.getKey()).get(2, 1);
+            int curAdd22 = add22 - substract.get(entry.getKey()).get(2, 2);
+            result.add(entry.getValue().add(2, 1, curAdd21).add(2, 2, curAdd22));
         }
         
         return result;
