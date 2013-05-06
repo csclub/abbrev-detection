@@ -166,6 +166,25 @@ public class AbbreviationExtractorApp  extends Component {
                         "UTF-8"
                     );
             
+            //mutual information based 
+            {
+                String corpusFile = Paths.get(System.getProperty("user.dir"), "../../datasets/opencorpora/opencorpora.sent.train.ru").toString();
+                Configuration config = new Configuration(new String [] 
+                                                {   
+                                                    "ConnectorClass", "org.csclub.abbrev.connectors.SentPerLineCorpusReader",
+                                                    "Connector.FileName", corpusFile,
+                                                    "Connector.FileEncoding", "UTF-8",
+                                                    "AlgorithmClass", "org.csclub.abbrev.algorithms.tba.MutualInformationBasedAlgorithm",
+                                                } 
+                                             );
+                AbbreviationExtractorApp app = new AbbreviationExtractorApp();
+                app.init(config);
+                app.run();
+                
+                ConfusionMatrix matrix = evaluator.evaluate(app.algorithm.getAbbreviations());
+                System.out.println("Mutual information based: " + matrix);
+            }
+            
         } catch(Exception e) {
             e.printStackTrace(System.out);
         }
