@@ -7,6 +7,7 @@ import org.csclub.abbrev.algorithms.tba.CorpusAbbreviation;
 import org.csclub.abbrev.connectors.CorpusReader;
 import org.csclub.abbrev.evaluation.AbbreviationEvaluator;
 import org.csclub.abbrev.evaluation.ConfusionMatrix;
+import org.csclub.abbrev.evaluation.MetaClassifierCorpusBuilder;
 import org.csclub.abbrev.impl.Component;
 import org.csclub.abbrev.impl.Configuration;
 import org.csclub.abbrev.impl.ConfigurationParameter;
@@ -62,7 +63,12 @@ public class AbbreviationExtractorApp  extends Component {
         
         // threshold based
         try {
-            
+            List<Abbreviation> goldPositiveAbbreviations = Serializer.fromTextFile
+                    (
+                        Paths.get(System.getProperty("user.dir"), "../../resources/abbreviations/abbrev-gold-simple-positive.txt").toString(), 
+                        "UTF-8", 
+                        Abbreviation.class
+                    );
             List<CorpusAbbreviation> goldAbbreviations = Serializer.fromTextFile
                     (
                         Paths.get(System.getProperty("user.dir"), "../../resources/abbreviations/abbrev-gold.txt").toString(), 
@@ -70,6 +76,8 @@ public class AbbreviationExtractorApp  extends Component {
                         CorpusAbbreviation.class
                     );
             AbbreviationEvaluator evaluator = new AbbreviationEvaluator(goldAbbreviations);
+            
+            MetaClassifierCorpusBuilder metaCorpusBuilder = new MetaClassifierCorpusBuilder (goldPositiveAbbreviations);
             
             // threshold based
             {
@@ -88,6 +96,7 @@ public class AbbreviationExtractorApp  extends Component {
                 app.init(config);
                 app.run();
                 
+                metaCorpusBuilder.addClassifier(app.algorithm.getClass().getSimpleName(), app.algorithm.getAbbreviations());
                 ConfusionMatrix matrix = evaluator.evaluate(app.algorithm.getAbbreviations());
                 System.out.println("Threshold based: " + matrix);
             }
@@ -107,6 +116,7 @@ public class AbbreviationExtractorApp  extends Component {
                 app.init(config);
                 app.run();
                 
+                metaCorpusBuilder.addClassifier(app.algorithm.getClass().getSimpleName(), app.algorithm.getAbbreviations());
                 ConfusionMatrix matrix = evaluator.evaluate(app.algorithm.getAbbreviations());
                 System.out.println("Fraction based: " + matrix);
             }
@@ -126,6 +136,7 @@ public class AbbreviationExtractorApp  extends Component {
                 app.init(config);
                 app.run();
                 
+                metaCorpusBuilder.addClassifier(app.algorithm.getClass().getSimpleName(), app.algorithm.getAbbreviations());
                 ConfusionMatrix matrix = evaluator.evaluate(app.algorithm.getAbbreviations());
                 System.out.println("T-Test based: " + matrix);
             }
@@ -144,9 +155,16 @@ public class AbbreviationExtractorApp  extends Component {
                 app.init(config);
                 app.run();
                 
+                metaCorpusBuilder.addClassifier(app.algorithm.getClass().getSimpleName(), app.algorithm.getAbbreviations());
                 ConfusionMatrix matrix = evaluator.evaluate(app.algorithm.getAbbreviations());
                 System.out.println("Chi sqare test based: " + matrix);
             }
+            
+            metaCorpusBuilder.buildARFF
+                    ( 
+                        Paths.get(System.getProperty("user.dir"), "../../resources/abbreviations/meta-classifier.arff").toString(),  
+                        "UTF-8"
+                    );
             
         } catch(Exception e) {
             e.printStackTrace(System.out);

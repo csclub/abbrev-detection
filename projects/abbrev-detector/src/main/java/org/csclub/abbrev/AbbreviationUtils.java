@@ -1,9 +1,11 @@
 package org.csclub.abbrev;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import org.csclub.abbrev.algorithms.tba.CorpusAbbreviation;
 
 /**
  *
@@ -52,4 +54,17 @@ public class AbbreviationUtils {
             System.out.println(abbrev.toString());
         }
     }
+    
+    /** method that probably will be deleted soon */
+    public static void convertCorpusAbbreviationsToAbbreviations(final String intputFile, final String outputFile, final String encoding) throws IOException, NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        List<CorpusAbbreviation> corpusAbbreviations = Serializer.fromTextFile(intputFile, encoding, CorpusAbbreviation.class);
+        List<Abbreviation> abbreviations = new ArrayList<> ();
+        for (CorpusAbbreviation corpusAbbreviation : corpusAbbreviations) {
+            if (corpusAbbreviation.isValid()) {
+                abbreviations.add(new Abbreviation(corpusAbbreviation.getAbbrevText()));
+            }
+        }
+        Serializer.toTextFile(outputFile, encoding, abbreviations);
+    }
+    
 }
