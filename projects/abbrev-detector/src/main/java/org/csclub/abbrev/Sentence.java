@@ -5,6 +5,14 @@ import java.util.List;
 /**
  *
  * @author Sergey Serebryakov
+ * 
+ * If (sentence is not null), initial text of the sentence is available.
+ * If (tokens is not null), some tokenizer (probably, human) tokenized the sentence.
+ * 
+ * Generally, following three possibilities are valid:
+ *  (1) sentence is null, tokens array is not null;
+ *  (2) sentence is not null, tokens array is null;
+ *  (3) sentence is not null, tokens array is not null
  */
 public class Sentence {
     
