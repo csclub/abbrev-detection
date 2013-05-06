@@ -29,8 +29,6 @@ import org.csclub.abbrev.impl.ConfigurationParameter;
  *   "algorithm.param2" : "value2"
  *   ...
  *
- * 
- * AbbreviationExtractorApp --ConnectorClass="connectorClass" --ConnectorOptions="options..." --AlgorithmClass="algorithmClass" --AlgorithmOptions="options..."
  */
 public class AbbreviationExtractorApp  extends Component {
     
@@ -41,6 +39,9 @@ public class AbbreviationExtractorApp  extends Component {
     
     private CorpusReader corpusReader;
     private Algorithm algorithm;
+    
+    public CorpusReader getCorpusReader() { return corpusReader; }
+    public Algorithm getAlgorithm() { return algorithm; }
     
     @Override
     public void init(Configuration storage) throws Exception {
