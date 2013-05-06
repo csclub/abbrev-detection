@@ -19,7 +19,7 @@ import java.lang.reflect.Method;
  */
 public class Component {
     
-     public void init(Configuration config) throws Exception {
+    public void init(Configuration config) throws Exception {
         if (null != config) {
             for(Field field : this.getClass().getDeclaredFields()){
                 if (field.isAnnotationPresent(ConfigurationParameter.class)) {
@@ -54,9 +54,6 @@ public class Component {
      
      private void setFromString(Field field, String value) throws IllegalArgumentException, IllegalAccessException {
          Class klass = field.getType();
-         
-         Class strClass = String.class;
-         
          if (klass.equals(String.class)) {
               field.set(this, value);
          } else if (klass.equals(Integer.class) || klass.equals(int.class)) {

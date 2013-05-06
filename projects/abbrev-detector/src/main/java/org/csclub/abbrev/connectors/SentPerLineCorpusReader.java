@@ -16,10 +16,11 @@ import org.csclub.abbrev.impl.Configuration;
  * @author Sergey Serebryakov
  * 
  * Reads textual file line by line. Each line should contain only one sentence.
+ * Can be initialized as follows:
  */
 public class SentPerLineCorpusReader extends CorpusReader {
     /** full path to a file */
-    @ConfigurationParameter(name="FileName", mandatory = true)
+    @ConfigurationParameter(name="FileName")
     private String fileName;
     /** file encoding */
     @ConfigurationParameter(name="FileEncoding", defaultValue="UTF-8")

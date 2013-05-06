@@ -29,6 +29,8 @@ import org.csclub.abbrev.impl.ConfigurationParameter;
  *   "algorithm.param2" : "value2"
  *   ...
  *
+ * 
+ * AbbreviationExtractorApp --ConnectorClass="connectorClass" --ConnectorOptions="options..." --AlgorithmClass="algorithmClass" --AlgorithmOptions="options..."
  */
 public class AbbreviationExtractorApp  extends Component {
     
@@ -57,6 +59,22 @@ public class AbbreviationExtractorApp  extends Component {
         
         // run final algorithm steps
         algorithm.run(corpus);
+    }
+    
+    /** 
+     * This method should be called from main method in production version.
+     * From command line, the class can be invoked in the following way:
+     * AbbreviationExtractorApp --ConnectorClass="some class" --Connector.Option1=value1 --Connector.Option2="value2" ... --AlgorithmClass="some class" --Algorithm.Option1=option1 ...
+     */
+    public static void run(String [] args) {
+        try {
+            Configuration config = AbbreviationUtils.commandLineArgsToConfiguration(args);
+            AbbreviationExtractorApp app = new AbbreviationExtractorApp ();
+            app.init(config);
+            app.run();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
     
     public static void main( String[] args ) {
