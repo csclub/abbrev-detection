@@ -20,12 +20,23 @@ public class AbbreviationUtils {
         List<String> tokens = new ArrayList();
         for (int i = 0; i < tempTokens.length; ++i) {
             if (!tempTokens[i].isEmpty()) {
-                tokens.add(tempTokens[i]);
+                tokens.add(tempTokens[i].replaceAll("\\.+", "."));
             }
         }
+        
+        int b = tokens.size() - 1;
+        int pb = tokens.size() - 2;
+        int spb = sentence.length() - 2;
+        if (pb >= 0 && spb >= 0) {
+            if (tokens.get(b).equals(PERIOD) && sentence.charAt(spb) == ' ') {
+                tokens.set(pb, tokens.get(pb) + PERIOD);
+                tokens.remove(b);
+            }
+        }
+        
         return tokens;
     }
-    
+    //Оно нашло сакральную персону себе под стать
     public static List<String> tokenize(Corpus corpus) {
         List<String> tokens = new ArrayList();
         for (Sentence sentence : corpus.getSentences()) {
