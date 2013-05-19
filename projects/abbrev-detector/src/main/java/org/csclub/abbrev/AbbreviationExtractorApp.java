@@ -71,7 +71,7 @@ public class AbbreviationExtractorApp  extends Component {
                     );
             List<CorpusAbbreviation> goldAbbreviations = Serializer.fromTextFile
                     (
-                        Paths.get(System.getProperty("user.dir"), "../../resources/abbreviations/abbrev-gold.txt").toString(), 
+                        Paths.get(System.getProperty("user.dir"), "../../resources/abbreviations/abbrev-gold-length.txt").toString(), 
                         "UTF-8",
                         CorpusAbbreviation.class
                     );
@@ -89,7 +89,6 @@ public class AbbreviationExtractorApp  extends Component {
                                                     "Connector.FileEncoding", "UTF-8",
 
                                                     "AlgorithmClass", "org.csclub.abbrev.algorithms.tba.ThresholdBasedAlgorithm",
-                                                    "Algorithm.Threshold", "2",
                                                 } 
                                              );
                 AbbreviationExtractorApp app = new AbbreviationExtractorApp ();
@@ -101,27 +100,26 @@ public class AbbreviationExtractorApp  extends Component {
                 System.out.println("Threshold based: " + matrix);
             }
             
+            //length based algorithm 
             {
-                String corpusFile = Paths.get(System.getProperty("user.dir"), "../../resources/abbreviations/abbrev-gold.txt").toString();
-                Configuration config = new Configuration( new String [] 
+                String corpusFile = Paths.get(System.getProperty("user.dir"), "../../datasets/opencorpora/opencorpora.sent.train.ru").toString();
+                Configuration config = new Configuration(new String [] 
                                                 {   
-                                                    "ConnectorClass", "org.csclub.abbrev.algorithms.tba.impl.AbbreviationsCorpusReader",
+                                                    "ConnectorClass", "org.csclub.abbrev.connectors.SentPerLineCorpusReader",
                                                     "Connector.FileName", corpusFile,
                                                     "Connector.FileEncoding", "UTF-8",
-
-                                                    "AlgorithmClass", "org.csclub.abbrev.algorithms.tba.FractionBasedAlgorithm"
+                                                    "AlgorithmClass", "org.csclub.abbrev.algorithms.tba.LengthBasedAlgorithm",
                                                 } 
                                              );
-                AbbreviationExtractorApp app = new AbbreviationExtractorApp ();
+                AbbreviationExtractorApp app = new AbbreviationExtractorApp();
                 app.init(config);
                 app.run();
                 
-                metaCorpusBuilder.addClassifier(app.algorithm.getClass().getSimpleName(), app.algorithm.getAbbreviations());
                 ConfusionMatrix matrix = evaluator.evaluate(app.algorithm.getAbbreviations());
-                System.out.println("Fraction based: " + matrix);
+                System.out.println("Length based algorithm: " + matrix);
             }
             
-            
+            //t-test based algorithm
             {
                 String corpusFile = Paths.get(System.getProperty("user.dir"), "../../datasets/opencorpora/opencorpora.sent.train.ru").toString();
                 Configuration config = new Configuration(new String [] 
@@ -141,6 +139,7 @@ public class AbbreviationExtractorApp  extends Component {
                 System.out.println("T-Test based: " + matrix);
             }
             
+            //chi-square based algorithm        
             {
                 String corpusFile = Paths.get(System.getProperty("user.dir"), "../../datasets/opencorpora/opencorpora.sent.train.ru").toString();
                 Configuration config = new Configuration(new String [] 
@@ -166,6 +165,25 @@ public class AbbreviationExtractorApp  extends Component {
                         "UTF-8"
                     );
             
+            //likelihood ratios based 
+            {
+                String corpusFile = Paths.get(System.getProperty("user.dir"), "../../datasets/opencorpora/opencorpora.sent.train.ru").toString();
+                Configuration config = new Configuration(new String [] 
+                                                {   
+                                                    "ConnectorClass", "org.csclub.abbrev.connectors.SentPerLineCorpusReader",
+                                                    "Connector.FileName", corpusFile,
+                                                    "Connector.FileEncoding", "UTF-8",
+                                                    "AlgorithmClass", "org.csclub.abbrev.algorithms.tba.LikelihoodRatiosBasedAlgorithm",
+                                                } 
+                                             );
+                AbbreviationExtractorApp app = new AbbreviationExtractorApp();
+                app.init(config);
+                app.run();
+                
+                ConfusionMatrix matrix = evaluator.evaluate(app.algorithm.getAbbreviations());
+                System.out.println("Likelihood ratios based: " + matrix);
+            }
+            
             //mutual information based 
             {
                 String corpusFile = Paths.get(System.getProperty("user.dir"), "../../datasets/opencorpora/opencorpora.sent.train.ru").toString();
@@ -184,6 +202,48 @@ public class AbbreviationExtractorApp  extends Component {
                 ConfusionMatrix matrix = evaluator.evaluate(app.algorithm.getAbbreviations());
                 System.out.println("Mutual information based: " + matrix);
             }
+            
+            /*{
+                String corpusFile = Paths.get(System.getProperty("user.dir"), "../../resources/abbreviations/abbrev-gold.txt").toString();
+                Configuration config = new Configuration( new String [] 
+                                                {   
+                                                    "ConnectorClass", "org.csclub.abbrev.algorithms.tba.impl.AbbreviationsCorpusReader",
+                                                    "Connector.FileName", corpusFile,
+                                                    "Connector.FileEncoding", "UTF-8",
+
+                                                    "AlgorithmClass", "org.csclub.abbrev.algorithms.tba.FractionBasedAlgorithm"
+                                                } 
+                                             );
+                AbbreviationExtractorApp app = new AbbreviationExtractorApp ();
+                app.init(config);
+                app.run();
+                
+                metaCorpusBuilder.addClassifier(app.algorithm.getClass().getSimpleName(), app.algorithm.getAbbreviations());
+                ConfusionMatrix matrix = evaluator.evaluate(app.algorithm.getAbbreviations());
+                System.out.println("Fraction based: " + matrix);
+            }
+           
+            
+            //next symbol based 
+            {
+                String corpusFile = Paths.get(System.getProperty("user.dir"), "../../datasets/opencorpora/opencorpora.sent.train.ru").toString();
+                Configuration config = new Configuration(new String [] 
+                                                {   
+                                                    "ConnectorClass", "org.csclub.abbrev.connectors.SentPerLineCorpusReader",
+                                                    "Connector.FileName", corpusFile,
+                                                    "Connector.FileEncoding", "UTF-8",
+                                                    "AlgorithmClass", "org.csclub.abbrev.algorithms.tba.NextSymbolBasedAlgorithm",
+                                                } 
+                                             );
+                AbbreviationExtractorApp app = new AbbreviationExtractorApp();
+                app.init(config);
+                app.run();
+                
+                ConfusionMatrix matrix = evaluator.evaluate(app.algorithm.getAbbreviations());
+                System.out.println("Next symbol based: " + matrix);
+            }
+            
+            */
             
         } catch(Exception e) {
             e.printStackTrace(System.out);
