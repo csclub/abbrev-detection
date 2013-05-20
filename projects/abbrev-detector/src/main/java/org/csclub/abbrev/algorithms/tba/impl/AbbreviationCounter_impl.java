@@ -57,13 +57,22 @@ public class AbbreviationCounter_impl implements AbbreviationCounter <CorpusAbbr
         Collections.sort(sortedAbbreviations, new Comparator<Pair<String, CorpusAbbreviation>>() {
             @Override
             public int compare(Pair<String, CorpusAbbreviation> o1, Pair<String, CorpusAbbreviation> o2) {
+                
+                if (o1.getKey().length() > o2.getKey().length()) {
+                    return 1;
+                }
+                if (o1.getKey().length() < o2.getKey().length()) {
+                    return -1;
+                }
+                
                 if (o1.getValue().getAbbrevCount() < o2.getValue().getAbbrevCount() ) {
                     return 1;
-                } if (o1.getValue().getAbbrevCount() > o2.getValue().getAbbrevCount() ) {
-                    return -1;
-                } else {
-                    return 0;
                 }
+                if (o1.getValue().getAbbrevCount() > o2.getValue().getAbbrevCount() ) {
+                    return -1;
+                }
+                
+                return 0;
             }
         });
     }
