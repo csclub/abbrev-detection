@@ -10,6 +10,9 @@ import org.csclub.abbrev.CorpusMetadata;
 import org.csclub.abbrev.Sentence;
 import org.csclub.abbrev.impl.ConfigurationParameter;
 import org.csclub.abbrev.impl.Configuration;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Map.Entry;
 
 /**
  *
@@ -35,11 +38,18 @@ public class SentPerLineCorpusReader extends CorpusReader {
     
     @Override
     public Corpus read() throws Exception {
-        List<Sentence> sentences = new ArrayList<>();
         LineIterator lineIterator = IOUtils.lineIterator(new FileInputStream(fileName), fileEncoding);
+        
+        Set<String> lines = new HashSet();
         while (lineIterator.hasNext()) {
-            sentences.add(new Sentence(lineIterator.nextLine()));
+            lines.add(lineIterator.nextLine());
         }
+        
+        List<Sentence> sentences = new ArrayList();
+        for (String line : lines) {
+            sentences.add(new Sentence(line));
+        }
+        
         return new Corpus(sentences, (CorpusMetadata)null);
     }
      
