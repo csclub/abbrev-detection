@@ -31,6 +31,7 @@ public class AbbreviationExtractor_impl implements AbbreviationExtractor <Corpus
      */
     @Override
     public List<CorpusAbbreviation> extract(Sentence sentence) {
+        //System.out.println(sentence.getSentence());
         List<String> tokens;
         if (null != sentence.getTokens()) {
             tokens = sentence.getTokens();
@@ -39,20 +40,27 @@ public class AbbreviationExtractor_impl implements AbbreviationExtractor <Corpus
         }
         
         List<CorpusAbbreviation> abbreviations = new ArrayList();
-        for (int i = 0; i < tokens.size() - 1; i++) {
+        for (int i = 0; i < tokens.size(); i++) {
             if (tokens.get(i).endsWith(".")) {
                 // get abbreviation
                 String abbrevText = getTokenAbbreviation(tokens.get(i));
                 if (null == abbrevText) {
                     continue;
                 }
+                
                 CorpusAbbreviation abbrev = new CorpusAbbreviation(tokens.get(i));
+                
                 // get abbreviation context
-                if (i == 0 && tokens.size() >= 1) {
-                    abbrev.addAbbrevContext(String.format("%s %s", tokens.get(i), tokens.get(1)));
-                } else if (i >= 1 && tokens.size() >= 2) {
-                    abbrev.addAbbrevContext(String.format("%s %s %s", tokens.get(i - 1), tokens.get(i), tokens.get(i + 1)));
-                } 
+                String context = "";
+                if (i - 1 >= 0) {
+                    context += tokens.get(i - 1) + " ";
+                }
+                context += tokens.get(i);
+                if (i + 1 < tokens.size()) {
+                    context += " " + tokens.get(i + 1);
+                }
+                
+                abbrev.addAbbrevContext(context);
                     
                 abbreviations.add(abbrev);
             }
