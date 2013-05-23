@@ -2,17 +2,16 @@ package org.csclub.abbrev.connectors;
 
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 import org.csclub.abbrev.Corpus;
 import org.csclub.abbrev.CorpusMetadata;
 import org.csclub.abbrev.Sentence;
-import org.csclub.abbrev.impl.ConfigurationParameter;
 import org.csclub.abbrev.impl.Configuration;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Map.Entry;
+import org.csclub.abbrev.impl.ConfigurationParameter;
 
 /**
  *
