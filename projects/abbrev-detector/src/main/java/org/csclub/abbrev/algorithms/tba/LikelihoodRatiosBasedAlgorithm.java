@@ -10,7 +10,7 @@ import org.csclub.abbrev.Corpus;
 import org.csclub.abbrev.Sentence;
 import org.csclub.abbrev.algorithms.Algorithm;
 import org.csclub.abbrev.algorithms.tba.impl.AbbreviationExtractor_impl;
-import org.csclub.abbrev.algorithms.tba.impl.TrieAbbreviationCounter;
+import org.csclub.abbrev.algorithms.tba.impl.AbbreviationCounter_impl;
 import org.csclub.abbrev.algorithms.tba.impl.TwoByTwoTable;
 import org.csclub.abbrev.impl.ConfigurationParameter;
 
@@ -24,7 +24,7 @@ import org.csclub.abbrev.impl.ConfigurationParameter;
  */
 public class LikelihoodRatiosBasedAlgorithm extends Algorithm {
     
-    @ConfigurationParameter(name = "Threshold", defaultValue = "0.095")
+    @ConfigurationParameter(name = "Threshold", defaultValue = "2.00")
     private double threshold;
 
     private AbbreviationCounter abbrevCounter;
@@ -44,7 +44,7 @@ public class LikelihoodRatiosBasedAlgorithm extends Algorithm {
     }
     
     public LikelihoodRatiosBasedAlgorithm() {
-        abbrevCounter = new TrieAbbreviationCounter();
+        abbrevCounter = new AbbreviationCounter_impl();
         abrbevExtractor = new AbbreviationExtractor_impl();
     }
     

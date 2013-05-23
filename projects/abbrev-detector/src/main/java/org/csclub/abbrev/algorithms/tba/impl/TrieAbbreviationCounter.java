@@ -67,18 +67,24 @@ public class TrieAbbreviationCounter implements AbbreviationCounter<CorpusAbbrev
          * @param abbreviation is addition abbreviation.
          */
         public void add(CorpusAbbreviation abbreviation) {
+            //throw new Exception();
+            //if (abbreviation.getAbbrevText().equals("ошиблась.")) {
+            //    System.err.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            //}
+            String text = abbreviation.getAbbrevText();
+            
             Node cur = root;
-            for (int i = 0; i < abbreviation.getAbbrevText().length(); ++i) {
-                if (!cur.next.containsKey(Character.valueOf(abbreviation.getAbbrevText().charAt(i)))) {
-                    cur.next.put(abbreviation.getAbbrevText().charAt(i), 
-                                 new Node(cur, abbreviation.getAbbrevText().charAt(i), abbreviation.getAbbrevState()));
+            for (int i = 0; i < text.length(); ++i) {
+                if (!cur.next.containsKey(Character.valueOf(text.charAt(i)))) {
+                    cur.next.put(text.charAt(i), 
+                                 new Node(cur, text.charAt(i), abbreviation.getAbbrevState()));
                 }
-                cur = cur.next.get(abbreviation.getAbbrevText().charAt(i));
+                cur = cur.next.get(text.charAt(i));
             }
             cur.contexts.addAll(abbreviation.getAbbrevContexts());
             
             ++size;
-            maxLen = Math.max(maxLen, abbreviation.getAbbrevText().length());
+            maxLen = Math.max(maxLen, text.length());
         }
 
         /**

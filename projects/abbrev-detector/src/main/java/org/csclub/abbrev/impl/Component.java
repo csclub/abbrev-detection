@@ -26,11 +26,11 @@ public class Component {
                     field.setAccessible(true);
                     ConfigurationParameter cp = field.getAnnotation(ConfigurationParameter.class);
                     // name, default value, mandatory
-                    if (cp.mandatory()) {
-                        if (!config.hasValue(cp.name())) {
-                            throw new InitializationException(String.format("Parameter '%s' is declared as mandatory but is missing in storage", cp.name()));
-                        }
-                    }
+                    //if (cp.mandatory()) {
+                    //    if (!config.hasValue(cp.name())) {
+                    //        throw new InitializationException(String.format("Parameter '%s' is declared as mandatory but is missing in storage", cp.name()));
+                    //    }
+                    //}
                     
                     if (config.hasValue(cp.name())) {
                         String value = config.getValue(cp.name());
