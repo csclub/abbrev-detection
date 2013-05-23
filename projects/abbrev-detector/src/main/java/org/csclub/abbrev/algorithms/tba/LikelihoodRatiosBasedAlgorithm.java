@@ -24,7 +24,7 @@ import org.csclub.abbrev.impl.ConfigurationParameter;
  */
 public class LikelihoodRatiosBasedAlgorithm extends Algorithm {
     
-    @ConfigurationParameter(name = "Threshold", defaultValue = "2.00")
+    @ConfigurationParameter(name = "Threshold", defaultValue = "1.0")
     private double threshold;
 
     private AbbreviationCounter abbrevCounter;
@@ -94,7 +94,7 @@ public class LikelihoodRatiosBasedAlgorithm extends Algorithm {
             
             double s3 = Math.exp(-table.getFirstWord().length());
             
-            double logLambdaScaled = -2  * s1 * s2 * s3 * logLambda;
+            double logLambdaScaled = - s1 * s2 * s3 * logLambda;
 
             if (logLambdaScaled > threshold) {
                 abbrevTexts.add(table.getFirstWord() + AbbreviationUtils.PERIOD);
