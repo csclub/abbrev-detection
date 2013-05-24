@@ -1,0 +1,96 @@
+\documentclass[fullscreen, unicode, bookmarks = false]{beamer}
+\usetheme{default}
+
+\usepackage[cp1251]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{tikz}
+\usepackage{tabularx}
+
+\author{Амосов Федор}
+\institute{HP Labs}
+\title{Построение словаря сокращений}
+\date{29 мая 2013 г.}
+
+\begin{document}
+
+    \tikzstyle{thinline}=[gray,very thin]
+    \tikzstyle{emphline}=[red,thick]
+
+    \begin{frame}
+        \titlepage
+    \end{frame}
+
+    \begin{frame}{Постановка задачи}
+        \begin{itemize}
+			\item
+            	... чем их ранние и средние \textcolor{blue}{вещи.} Уже первые \textcolor{red}{научно-фантастич.} рассказы и повести \textcolor{red}{С.} отмечены вниманием к \textcolor{red}{внутр.} миру героев, «реалистичностью» деталей, \textcolor{blue}{юмором.} Разрабатывая \textcolor{red}{преим.} жанр \textcolor{red}{социально-филос.} фантастики, к-рый в творчестве \textcolor{red}{С.} нередко приобретает черты \textcolor{red}{сатирич.} гротеска, авторы отстаивают \textcolor{red}{гуманистич.} идеал прогресса во имя человека, предостерегают против бездуховного «благоденствия», выступают против любых форм порабощения, размышляют о роли личности в обществе, об ответственности перед \textcolor{blue}{будущим.} За последние ...
+
+			\item
+				... что тормозить тут \textcolor{blue}{нельзя.} Никакие "анализы через пару дней" и \textcolor{red}{т.п...} Праздник \textcolor{blue}{грядёт...} В этом году день варенья приходится на \textcolor{blue}{понедельник.} Что вызывает вопрос ...
+
+			\item
+				Ну чо, Show must go on, \textcolor{red}{ёпт.}
+					
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}{Подходы}
+        \begin{itemize}
+            \item
+                Отсечения,
+				\begin{itemize}
+					\item
+						по частоте
+					\item
+						по длине
+				\end{itemize}
+             
+            \item
+                Случайно ли появление слова $w$ и точки в виде \textcolor{red}{$w.$} ?
+				\begin{itemize}
+					\item
+						t--test
+					\item
+						Pirson test $\chi^2$
+				\end{itemize}
+
+			\item
+                Случайно ли появление слова $w$ и точки в виде \textcolor{red}{$w.$} , если оно зависит от $|w|$?
+				\begin{itemize}
+					\item
+						likelihood ratios (LR)
+					\item
+						mutual information (MI)
+				\end{itemize}
+            
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}{Результаты}
+		\begin{table} [ht] 
+			\begin{tabular} {| c | c | c | c |}
+				\multicolumn{1}{p{2.0 cm}}{} & \multicolumn{1}{p{2.0 cm}}{} & \multicolumn{1}{p{2.0 cm}}{} & \multicolumn{1}{p{2.0 cm}}{}	\\
+				\hline
+				\%				&	precision	&	recall	&	f--measure	\\
+				\hline
+				 по частоте		&	34			&	8		&	13			\\
+				по длине		&	55			&	38		&	45			\\
+				\hline
+				t--test			&	28			&	21		&	24			\\
+				test $\chi^2$	&	47 			&	31		&	37			\\
+				\hline
+				MI 				&	70			&	42		&	52			\\
+				LR				&	71			&	46		&	56			\\
+				\hline
+			\end{tabular}
+		\end{table}
+    \end{frame}
+
+    \begin{frame} {Q\&A}
+		\begin{center}
+        	Спасибо за внимание!
+		\end{center}
+    \end{frame}
+
+\end{document}

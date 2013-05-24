@@ -44,7 +44,7 @@ public class AbbreviationUtils {
         
         return tokens;
     }
-    //Оно нашло сакральную персону себе под стать
+    
     public static List<String> tokenize(Corpus corpus) {
         List<String> tokens = new ArrayList();
         for (Sentence sentence : corpus.getSentences()) {

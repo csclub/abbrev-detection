@@ -31,7 +31,7 @@ public class Plotter {
     
     public static void main(String [] args) throws IOException {
         
-        String fileName = Paths.get(System.getProperty("user.dir"), "../../datasets/europarlament/abbreviations/en/europarl-v7.fr-en.en-chi.txt").toString();
+        String fileName = Paths.get(System.getProperty("user.dir"), "../../datasets/europarlament/abbreviations/en/europarl-v7.fr-en.en-threshold.txt").toString();
         String fileEncoding = "UTF-8";
         
         double[] y = loadValues(fileName, fileEncoding);
