@@ -1,18 +1,30 @@
 package org.csclub.abbrev.algorithms.tba;
 
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.csclub.abbrev.Abbreviation;
+import org.csclub.abbrev.AbbreviationExtractorEngine;
 import org.csclub.abbrev.AbbreviationUtils;
 import org.csclub.abbrev.Corpus;
 import org.csclub.abbrev.Sentence;
+import org.csclub.abbrev.Serializer;
+import org.csclub.abbrev.WeightedAbbreviation;
 import org.csclub.abbrev.algorithms.Algorithm;
 import org.csclub.abbrev.algorithms.tba.impl.AbbreviationExtractor_impl;
 import org.csclub.abbrev.algorithms.tba.impl.AbbreviationCounter_impl;
 import org.csclub.abbrev.algorithms.tba.impl.TwoByTwoTable;
+import org.csclub.abbrev.evaluation.ConfusionMatrix;
+import org.csclub.abbrev.impl.Configuration;
 import org.csclub.abbrev.impl.ConfigurationParameter;
+import org.csclub.abbrev.impl.InitializationException;
 
 /**
  *
@@ -25,14 +37,15 @@ import org.csclub.abbrev.impl.ConfigurationParameter;
 public class LikelihoodRatiosBasedAlgorithm extends Algorithm {
     
     @ConfigurationParameter(name = "Threshold", defaultValue = "2.00")
-    private double threshold;
+    private Double threshold;
 
     private AbbreviationCounter abbrevCounter;
     private AbbreviationExtractor abrbevExtractor;
     
-    private List<CorpusAbbreviation> abbreviations = new ArrayList();
+    private List<WeightedAbbreviation> abbreviations = new ArrayList();
     
     private static double EPS = 0.000001;
+    //
     
     private double f(int k, int n, double x) { 
         if (Math.abs(1 - x) < EPS) {
@@ -66,6 +79,7 @@ public class LikelihoodRatiosBasedAlgorithm extends Algorithm {
         );
         
         Set<String> abbrevTexts = new HashSet();
+        Map<String, Double> abbrevWeights = new HashMap<> ();
         for (TwoByTwoTable table : tables) {
             int cWP = table.get(1, 1);
             int cWnotP = table.get(1, 2);
@@ -96,20 +110,38 @@ public class LikelihoodRatiosBasedAlgorithm extends Algorithm {
             
             double logLambdaScaled = -2  * s1 * s2 * s3 * logLambda;
 
-            if (logLambdaScaled > threshold) {
-                abbrevTexts.add(table.getFirstWord() + AbbreviationUtils.PERIOD);
+            if (threshold == null || logLambdaScaled > threshold) {
+                String abbrevText = table.getFirstWord() + AbbreviationUtils.PERIOD;
+                abbrevTexts.add(abbrevText);
+                abbrevWeights.put(abbrevText, logLambdaScaled);
             }
         }
         
         for (Abbreviation abbrev : sortedAbbreviations) {
             if (abbrevTexts.contains(abbrev.getAbbrevText())) {
-                abbreviations.add((CorpusAbbreviation)abbrev);
+                abbreviations.add(new WeightedAbbreviation(abbrev.getAbbrevText(), abbrevWeights.get(abbrev.getAbbrevText())));
             }
         }
     }
     
     @Override
-    public List<CorpusAbbreviation> getAbbreviations() {
+    public List<WeightedAbbreviation> getAbbreviations() {
         return abbreviations;
+    }
+    
+    public static void main(String [] args) throws InitializationException, Exception {
+        String corpusFile = "C:\\archive\\storage\\datasets\\mt\\europarl\\archives\\en\\src\\europarl-v7.fr-en.en";
+        Configuration config = new Configuration(new String [] 
+                                                {   
+                                                    "ConnectorClass", "org.csclub.abbrev.connectors.SentPerLineCorpusReader",
+                                                    "Connector.FileName", corpusFile,
+                                                    "Connector.FileEncoding", "UTF-8",
+                                                    "AlgorithmClass", "org.csclub.abbrev.algorithms.tba.LikelihoodRatiosBasedAlgorithm",
+                                                    "Algorithm.allAbbreviationsFileName", "C:\\archive\\storage\\datasets\\mt\\europarl\\archives\\en\\src\\all-abbreviations.txt",
+                                                } 
+                                             );
+        AbbreviationExtractorEngine app = new AbbreviationExtractorEngine();
+        app.init(config);
+        app.run();
     }
 }

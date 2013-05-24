@@ -1,0 +1,82 @@
+// ------------------------------------------------------------------------------
+English corpus
+// ------------------------------------------------------------------------------
+threshold based ...
+reading corpus (SentPerLineCorpusReader) ... done in 121.939 seconds
+running algorihm (ThresholdBasedAlgorithm) ... done in 8.895 seconds
+serializing abbreviations ... done in 0.830 seconds
+length based ...
+reading corpus (SentPerLineCorpusReader) ... done in 125.423 seconds
+running algorihm (LengthBasedAlgorithm) ... done in 10.032 seconds
+serializing abbreviations ... done in 0.831 seconds
+t-test based ...
+reading corpus (SentPerLineCorpusReader) ... done in 122.910 seconds
+running algorihm (TTestBasedAlgorithm) ... done in 143.829 seconds
+serializing abbreviations ... done in 1.082 seconds
+chi-squre based ...
+reading corpus (SentPerLineCorpusReader) ... done in 127.751 seconds
+running algorihm (ChiSquareTestBasedAlgorithm) ... done in 95.197 seconds
+serializing abbreviations ... done in 0.909 seconds
+likelihood-ratios based ...
+reading corpus (SentPerLineCorpusReader) ... done in 122.994 seconds
+running algorihm (LikelihoodRatiosBasedAlgorithm) ... done in 83.877 seconds
+serializing abbreviations ... done in 0.937 seconds
+mutual information based ...
+reading corpus (SentPerLineCorpusReader) ... done in 126.358 seconds
+running algorihm (MutualInformationBasedAlgorithm) ... done in 96.948 seconds
+serializing abbreviations ... done in 2.405 seconds
+// ------------------------------------------------------------------------------
+Spanish corpus
+// ------------------------------------------------------------------------------
+threshold based ...
+reading corpus (SentPerLineCorpusReader) ... done in 122.997 seconds
+running algorihm (ThresholdBasedAlgorithm) ... done in 11.309 seconds
+serializing abbreviations ... done in 1.785 seconds
+length based ...
+reading corpus (SentPerLineCorpusReader) ... done in 129.362 seconds
+running algorihm (LengthBasedAlgorithm) ... done in 11.025 seconds
+serializing abbreviations ... done in 1.789 seconds
+t based ...
+reading corpus (SentPerLineCorpusReader) ... done in 129.123 seconds
+running algorihm (TTestBasedAlgorithm) ... done in 164.364 seconds
+serializing abbreviations ... done in 1.415 seconds
+chi based ...
+reading corpus (SentPerLineCorpusReader) ... done in 131.477 seconds
+running algorihm (ChiSquareTestBasedAlgorithm) ... done in 97.647 seconds
+serializing abbreviations ... done in 1.139 seconds
+likelihood based ...
+reading corpus (SentPerLineCorpusReader) ... done in 122.784 seconds
+running algorihm (LikelihoodRatiosBasedAlgorithm) ... done in 99.274 seconds
+serializing abbreviations ... done in 1.175 seconds
+mi based ...
+reading corpus (SentPerLineCorpusReader) ... done in 127.148 seconds
+running algorihm (MutualInformationBasedAlgorithm) ... done in 98.838 seconds
+serializing abbreviations ... done in 1.526 seconds
+// ------------------------------------------------------------------------------
+Italian corpus
+// ------------------------------------------------------------------------------
+threshold based ...
+reading corpus (SentPerLineCorpusReader) ... done in 124.269 seconds
+running algorihm (ThresholdBasedAlgorithm) ... done in 10.515 seconds
+serializing abbreviations ... done in 1.042 seconds
+length based ...
+reading corpus (SentPerLineCorpusReader) ... done in 121.739 seconds
+running algorihm (LengthBasedAlgorithm) ... done in 9.600 seconds
+serializing abbreviations ... done in 1.003 seconds
+t based ...
+reading corpus (SentPerLineCorpusReader) ... done in 121.699 seconds
+running algorihm (TTestBasedAlgorithm) ... done in 148.549 seconds
+serializing abbreviations ... done in 1.200 seconds
+chi based ...
+reading corpus (SentPerLineCorpusReader) ... done in 131.903 seconds
+running algorihm (ChiSquareTestBasedAlgorithm) ... done in 93.246 seconds
+serializing abbreviations ... done in 2.027 seconds
+likelihood based ...
+reading corpus (SentPerLineCorpusReader) ... done in 126.093 seconds
+running algorihm (LikelihoodRatiosBasedAlgorithm) ... done in 95.392 seconds
+serializing abbreviations ... done in 1.209 seconds
+mi based ...
+reading corpus (SentPerLineCorpusReader) ... done in 129.100 seconds
+running algorihm (MutualInformationBasedAlgorithm) ... done in 94.429 seconds
+serializing abbreviations ... done in 1.477 seconds
+// ------------------------------------------------------------------------------

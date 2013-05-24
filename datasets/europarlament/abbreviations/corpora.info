@@ -1,0 +1,4 @@
+   lines    words     bytes         corpus
+  2007723  50263003 301523301 ./europarl-v7.fr-en.en
+  1965734  51622215 324915736 ./europarl-v7.es-en.es
+  1909115  48011261 325578545 ./europarl-v7.it-en.it

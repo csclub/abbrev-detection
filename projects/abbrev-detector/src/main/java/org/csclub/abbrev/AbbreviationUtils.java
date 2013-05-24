@@ -18,6 +18,11 @@ public class AbbreviationUtils {
 
     public static final String PERIOD = ".";
     
+    public static double toSeconds(long start, long stop) {
+        return (double)(stop - start) / 1000000000.0;
+    }
+    
+    
     public static List<String> tokenize(String sentence) {
         String[] tempTokens = sentence.split("[\\s()\"«»\\[\\]?:,;!]");
         List<String> tokens = new ArrayList();

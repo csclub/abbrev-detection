@@ -1,7 +1,9 @@
 package org.csclub.abbrev;
 
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import org.csclub.abbrev.algorithms.Algorithm;
 import org.csclub.abbrev.algorithms.tba.CorpusAbbreviation;
 import org.csclub.abbrev.connectors.CorpusReader;
@@ -30,12 +32,18 @@ import org.csclub.abbrev.impl.ConfigurationParameter;
  *   ...
  *
  */
-public class AbbreviationExtractorApp  extends Component {
+public class AbbreviationExtractorEngine  extends Component {
     
     @ConfigurationParameter(name="ConnectorClass", mandatory = true)
     private String connectorClassName;
     @ConfigurationParameter(name="AlgorithmClass", mandatory = true)
     private String algorithmClassName;
+    @ConfigurationParameter(name="OutputFileName", defaultValue=ConfigurationParameter.NULL)
+    private String outputFileName;
+    @ConfigurationParameter(name="OutputFileEncoding", defaultValue=ConfigurationParameter.NULL)
+    private String outputFileEncoding;
+    @ConfigurationParameter(name="Verbose", defaultValue="true")
+    private Boolean verbose;
     
     private CorpusReader corpusReader;
     private Algorithm algorithm;
@@ -55,11 +63,36 @@ public class AbbreviationExtractorApp  extends Component {
     }
     
     public void run() throws Exception {
+        long startTime, stopTime;
         // read entire corpus
+        if (verbose) { System.out.print(String.format("reading corpus (%s) ...", corpusReader.getClass().getSimpleName())); }
+        startTime = System.nanoTime();
         Corpus corpus = corpusReader.read();
+        stopTime = System.nanoTime();
+        if (verbose) { System.out.println(String.format(" done in %.3f seconds", AbbreviationUtils.toSeconds(startTime, stopTime))); }
         
         // run final algorithm steps
+        if (verbose) { System.out.print(String.format("running algorihm (%s) ...", algorithm.getClass().getSimpleName())); }
+        startTime = System.nanoTime();
         algorithm.run(corpus);
+        stopTime = System.nanoTime();
+        if (verbose) { System.out.println(String.format(" done in %.3f seconds", AbbreviationUtils.toSeconds(startTime, stopTime))); }
+        
+        // serialzie if required
+        if (null != outputFileName) {
+            if (verbose) { System.out.print("serializing abbreviations ..."); }
+            startTime = System.nanoTime();
+            List<? extends Abbreviation> abbreviations = algorithm.getAbbreviations();
+            // this should somehow must be debugged
+            Collections.sort(abbreviations, Collections.reverseOrder());
+            Serializer.toTextFile(
+                                   outputFileName, 
+                                   outputFileEncoding == null ? "UTF-8" : outputFileEncoding, 
+                                   abbreviations
+                                 );
+            stopTime = System.nanoTime();
+            if (verbose) { System.out.println(String.format(" done in %.3f seconds", AbbreviationUtils.toSeconds(startTime, stopTime))); }
+        }
     }
     
     /** 
@@ -70,7 +103,7 @@ public class AbbreviationExtractorApp  extends Component {
     public static void run(String [] args) {
         try {
             Configuration config = AbbreviationUtils.commandLineArgsToConfiguration(args);
-            AbbreviationExtractorApp app = new AbbreviationExtractorApp ();
+            AbbreviationExtractorEngine app = new AbbreviationExtractorEngine ();
             app.init(config);
             app.run();
         } catch(Exception e) {
@@ -108,9 +141,10 @@ public class AbbreviationExtractorApp  extends Component {
                                                     "Connector.FileEncoding", "UTF-8",
 
                                                     "AlgorithmClass", "org.csclub.abbrev.algorithms.tba.ThresholdBasedAlgorithm",
+                                                    "Algorithm.Threshold", "32",
                                                 } 
                                              );
-                AbbreviationExtractorApp app = new AbbreviationExtractorApp ();
+                AbbreviationExtractorEngine app = new AbbreviationExtractorEngine ();
                 app.init(config);
                 app.run();
                 
@@ -130,7 +164,7 @@ public class AbbreviationExtractorApp  extends Component {
                                                     "AlgorithmClass", "org.csclub.abbrev.algorithms.tba.LengthBasedAlgorithm",
                                                 } 
                                              );
-                AbbreviationExtractorApp app = new AbbreviationExtractorApp();
+                AbbreviationExtractorEngine app = new AbbreviationExtractorEngine();
                 app.init(config);
                 app.run();
                 
@@ -149,7 +183,7 @@ public class AbbreviationExtractorApp  extends Component {
                                                     "AlgorithmClass", "org.csclub.abbrev.algorithms.tba.TTestBasedAlgorithm",
                                                 } 
                                              );
-                AbbreviationExtractorApp app = new AbbreviationExtractorApp();
+                AbbreviationExtractorEngine app = new AbbreviationExtractorEngine();
                 app.init(config);
                 app.run();
                 
@@ -169,7 +203,7 @@ public class AbbreviationExtractorApp  extends Component {
                                                     "AlgorithmClass", "org.csclub.abbrev.algorithms.tba.ChiSquareTestBasedAlgorithm",
                                                 } 
                                              );
-                AbbreviationExtractorApp app = new AbbreviationExtractorApp();
+                AbbreviationExtractorEngine app = new AbbreviationExtractorEngine();
                 app.init(config);
                 app.run();
                 
@@ -195,7 +229,7 @@ public class AbbreviationExtractorApp  extends Component {
                                                     "AlgorithmClass", "org.csclub.abbrev.algorithms.tba.LikelihoodRatiosBasedAlgorithm",
                                                 } 
                                              );
-                AbbreviationExtractorApp app = new AbbreviationExtractorApp();
+                AbbreviationExtractorEngine app = new AbbreviationExtractorEngine();
                 app.init(config);
                 app.run();
                 
@@ -214,7 +248,7 @@ public class AbbreviationExtractorApp  extends Component {
                                                     "AlgorithmClass", "org.csclub.abbrev.algorithms.tba.MutualInformationBasedAlgorithm",
                                                 } 
                                              );
-                AbbreviationExtractorApp app = new AbbreviationExtractorApp();
+                AbbreviationExtractorEngine app = new AbbreviationExtractorEngine();
                 app.init(config);
                 app.run();
                 

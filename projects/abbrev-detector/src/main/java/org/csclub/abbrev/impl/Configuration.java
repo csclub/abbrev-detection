@@ -1,9 +1,14 @@
 package org.csclub.abbrev.impl;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Properties;
 
 /**
  *
@@ -51,5 +56,17 @@ public class Configuration {
             }
         }
         return new Configuration(namespaceStorage);
+    }
+    
+    public static Configuration loadFromFile(String fileName, String encoding) throws IOException {
+        Properties properties = new Properties ();
+        properties.load( new InputStreamReader(new FileInputStream(fileName), encoding));
+        Map<String, String> data = new HashMap<> ();
+        Enumeration keys = properties.propertyNames();
+        while (keys.hasMoreElements()) {
+            String key = (String)keys.nextElement();
+            data.put(key, properties.getProperty(key));
+        }
+        return new Configuration(data);
     }
 }

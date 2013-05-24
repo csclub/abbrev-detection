@@ -1,13 +1,16 @@
 package org.csclub.abbrev.algorithms.tba;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.csclub.abbrev.Abbreviation;
 import org.csclub.abbrev.AbbreviationUtils;
 import org.csclub.abbrev.Corpus;
 import org.csclub.abbrev.Sentence;
+import org.csclub.abbrev.WeightedAbbreviation;
 import org.csclub.abbrev.algorithms.Algorithm;
 import org.csclub.abbrev.algorithms.tba.impl.AbbreviationCounter_impl;
 import org.csclub.abbrev.algorithms.tba.impl.AbbreviationExtractor_impl;
@@ -22,15 +25,15 @@ import org.csclub.abbrev.impl.ConfigurationParameter;
  * 
  * @author Fedor Amosov 
  */
-public class ChiSquareTestBasedAlgorithm extends Algorithm<CorpusAbbreviation> {
+public class ChiSquareTestBasedAlgorithm extends Algorithm {
     
     @ConfigurationParameter(name = "Threshold", defaultValue = "62.5")
-    private double threshold;
+    private Double threshold;
 
     private AbbreviationCounter abbrevCounter;
     private AbbreviationExtractor abrbevExtractor;
     
-    private List<CorpusAbbreviation> abbreviations = new ArrayList();
+    private List<WeightedAbbreviation> abbreviations = new ArrayList();
     
     
     public ChiSquareTestBasedAlgorithm() {
@@ -56,6 +59,7 @@ public class ChiSquareTestBasedAlgorithm extends Algorithm<CorpusAbbreviation> {
         );
         
         Set<String> abbrevTexts = new HashSet();
+        Map<String, Double> abbrevWeights = new HashMap<> ();
         for (TwoByTwoTable table : tables) {
             int c11 = table.get(1, 1);
             int c12 = table.get(1, 2);
@@ -63,27 +67,35 @@ public class ChiSquareTestBasedAlgorithm extends Algorithm<CorpusAbbreviation> {
             int c22 = table.get(2, 2);
             
             double chi2 = neibTokens.size();
-            chi2 /= (c12 + c22);
-            chi2 /= (c11 + c12);
-            chi2 *= (c11 * c22 - c12 * c21);
-            chi2 /= (c21 + c22);
-            chi2 *= (c11 * c22 - c12 * c21);
-            chi2 /= (c11 + c21);
-            
-            if (chi2 > threshold) {
-                abbrevTexts.add(table.getFirstWord() + AbbreviationUtils.PERIOD);
+            int sum_c12_c22 = c12 + c22;
+            int sum_c11_c12 = c11 + c12;
+            int sum_c21_c22 = c21 + c22;
+            int sum_c11_c21 = c11 + c21;
+            if (sum_c12_c22 != 0 && sum_c11_c12 != 0 && sum_c21_c22 != 0 && sum_c11_c21 != 0) {
+                chi2 /= sum_c12_c22;
+                chi2 /= sum_c11_c12;
+                chi2 *= (c11 * c22 - c12 * c21);
+                chi2 /= sum_c21_c22;
+                chi2 *= (c11 * c22 - c12 * c21);
+                chi2 /= sum_c11_c21;
+
+                if (threshold == null || chi2 > threshold) {
+                    String abbrevText = table.getFirstWord() + AbbreviationUtils.PERIOD;
+                    abbrevTexts.add(abbrevText);
+                    abbrevWeights.put(abbrevText, chi2);
+                }
             }
         }
         
         for (Abbreviation abbrev : sortedAbbreviations) {
             if (abbrevTexts.contains(abbrev.getAbbrevText())) {
-                abbreviations.add((CorpusAbbreviation)abbrev);
+                abbreviations.add(new WeightedAbbreviation(abbrev.getAbbrevText(), abbrevWeights.get(abbrev.getAbbrevText())));
             }
         }
     }
     
     @Override
-    public List<CorpusAbbreviation> getAbbreviations() {
+    public List<WeightedAbbreviation> getAbbreviations() {
         return abbreviations;
     }
 }

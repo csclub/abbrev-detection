@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.csclub.abbrev.Corpus;
 import org.csclub.abbrev.Sentence;
+import org.csclub.abbrev.WeightedAbbreviation;
 import org.csclub.abbrev.algorithms.Algorithm;
 import org.csclub.abbrev.algorithms.tba.impl.AbbreviationCounter_impl;
 import org.csclub.abbrev.algorithms.tba.impl.AbbreviationExtractor_impl;
@@ -16,13 +17,13 @@ import org.csclub.abbrev.impl.ConfigurationParameter;
 public class LengthBasedAlgorithm extends Algorithm {
     
     @ConfigurationParameter(name = "Threshold", defaultValue = "3")
-    private double threshold;
+    private Double threshold;
 
     
     private AbbreviationCounter abbrevCounter;
     private AbbreviationExtractor abrbevExtractor;
     
-    private List<CorpusAbbreviation> abbreviations = new ArrayList();
+    private List<WeightedAbbreviation> abbreviations = new ArrayList();
     
     public LengthBasedAlgorithm() {
         abbrevCounter = new AbbreviationCounter_impl();
@@ -41,14 +42,14 @@ public class LengthBasedAlgorithm extends Algorithm {
         List<CorpusAbbreviation> sortedAbbreviations = abbrevCounter.getSortedAbbreviations();
         
         for (CorpusAbbreviation abbrev : sortedAbbreviations) {
-            if (abbrev.getAbbrevText().length() <= threshold) {
-                abbreviations.add(abbrev);
+            if (threshold == null || abbrev.getAbbrevText().length() <= threshold) {
+                abbreviations.add(new WeightedAbbreviation(abbrev.getAbbrevText(), abbrev.getAbbrevText().length()));
             }    
         }
     }
     
     @Override
-    public List<CorpusAbbreviation> getAbbreviations() {
+    public List<WeightedAbbreviation> getAbbreviations() {
         return abbreviations;
     }
 }

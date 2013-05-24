@@ -7,6 +7,7 @@ import java.util.Map;
 import org.csclub.abbrev.AbbreviationUtils;
 import org.csclub.abbrev.Corpus;
 import org.csclub.abbrev.Sentence;
+import org.csclub.abbrev.WeightedAbbreviation;
 import org.csclub.abbrev.algorithms.Algorithm;
 import org.csclub.abbrev.algorithms.tba.impl.AbbreviationCounter_impl;
 import org.csclub.abbrev.algorithms.tba.impl.AbbreviationExtractor_impl;
@@ -20,15 +21,15 @@ import org.csclub.abbrev.impl.ConfigurationParameter;
  * 
  * @author fedor
  */
-public class TTestBasedAlgorithm extends Algorithm <CorpusAbbreviation> {
+public class TTestBasedAlgorithm extends Algorithm  {
     
     @ConfigurationParameter(name = "Threshold", defaultValue = "2.78")
-    private double threshold;
+    private Double threshold;
 
     private AbbreviationCounter abbrevCounter;
     private AbbreviationExtractor abrbevExtractor;
     
-    private List<CorpusAbbreviation> abbreviations = new ArrayList();
+    private List<WeightedAbbreviation> abbreviations = new ArrayList();
     
     
     public TTestBasedAlgorithm() {
@@ -78,15 +79,15 @@ public class TTestBasedAlgorithm extends Algorithm <CorpusAbbreviation> {
                 
                 double t = (freqWP - pWP) / Math.sqrt(freqWP / nBigrams);
 
-                if (t > threshold) {
-                    abbreviations.add(abbrev);
+                if (threshold == null || t > threshold) {
+                    abbreviations.add(new WeightedAbbreviation(abbrev.getAbbrevText(), t));
                 }
             }
         }
     }
     
     @Override
-    public List<CorpusAbbreviation> getAbbreviations() {
+    public List<WeightedAbbreviation> getAbbreviations() {
         return abbreviations;
     }
 }

@@ -1,6 +1,9 @@
 package org.csclub.abbrev.connectors;
 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.io.IOUtils;
@@ -12,7 +15,6 @@ import org.csclub.abbrev.impl.ConfigurationParameter;
 import org.csclub.abbrev.impl.Configuration;
 import java.util.Set;
 import java.util.HashSet;
-import java.util.Map.Entry;
 
 /**
  *
@@ -39,16 +41,19 @@ public class SentPerLineCorpusReader extends CorpusReader {
     
     @Override
     public Corpus read() throws Exception {
-        LineIterator lineIterator = IOUtils.lineIterator(new FileInputStream(fileName), fileEncoding);
-        
-        Set<String> lines = new HashSet();
-        while (lineIterator.hasNext()) {
-            lines.add(lineIterator.nextLine());
-        }
         
         List<Sentence> sentences = new ArrayList();
-        for (String line : lines) {
-            sentences.add(new Sentence(line));
+        Set<String> lines = new HashSet();
+        
+        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), fileEncoding));
+        String line = reader.readLine();
+        
+        while (null != line) {
+            if (false == lines.contains(line)) {
+                lines.add(line);
+                sentences.add(new Sentence(line));
+            }
+            line = reader.readLine();
         }
         
         return new Corpus(sentences, (CorpusMetadata)null);

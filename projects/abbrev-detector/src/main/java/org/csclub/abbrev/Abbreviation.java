@@ -1,7 +1,6 @@
 package org.csclub.abbrev;
 
 import java.io.Serializable;
-import org.apache.commons.lang3.ObjectUtils;
 
 /**
  *
@@ -37,10 +36,6 @@ public class Abbreviation implements Serializable, Comparable<Abbreviation> {
     
     @Override
     public int compareTo(Abbreviation abbrev) {
-        if (null == abbrev) {
-            //since this is not null, it is always greater than null
-            return 1;
-        }
-        return ObjectUtils.compare(abbrevText, abbrev.getAbbrevText());
+        return abbrevText.compareTo(abbrev.getAbbrevText());
     }
 }

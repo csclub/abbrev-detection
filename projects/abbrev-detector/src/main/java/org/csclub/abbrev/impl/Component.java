@@ -25,27 +25,21 @@ public class Component {
                 if (field.isAnnotationPresent(ConfigurationParameter.class)) {
                     field.setAccessible(true);
                     ConfigurationParameter cp = field.getAnnotation(ConfigurationParameter.class);
-                    // name, default value, mandatory
-                    //if (cp.mandatory()) {
-                    //    if (!config.hasValue(cp.name())) {
-                    //        throw new InitializationException(String.format("Parameter '%s' is declared as mandatory but is missing in storage", cp.name()));
-                    //    }
-                    //}
-                    
+                    String value;
                     if (config.hasValue(cp.name())) {
-                        String value = config.getValue(cp.name());
-                        setFromString(field, value);
+                        value = config.getValue(cp.name());
                     } else {
-                        String defaultValue = cp.defaultValue();
-                        if (defaultValue.equals(ConfigurationParameter.NULL)) {
-                            if (!field.getClass().isPrimitive()) {
-                                field.set(this, null);
-                            } else {
-                                field.set(this, 0);
-                            }
+                        value = cp.defaultValue();
+                    }
+
+                    if (value.equals(ConfigurationParameter.NULL)) {
+                        if (!field.getClass().isPrimitive()) {
+                            field.set(this, null);
                         } else {
-                            setFromString(field, defaultValue);    
+                            field.set(this, 0);
                         }
+                    } else {
+                        setFromString(field, value);
                     }
                 }
             }

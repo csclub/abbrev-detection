@@ -2,9 +2,9 @@ package org.csclub.abbrev.algorithms.tba;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.csclub.abbrev.Abbreviation;
 import org.csclub.abbrev.Corpus;
 import org.csclub.abbrev.Sentence;
+import org.csclub.abbrev.WeightedAbbreviation;
 import org.csclub.abbrev.algorithms.Algorithm;
 import org.csclub.abbrev.algorithms.tba.impl.AbbreviationCounter_impl;
 import org.csclub.abbrev.algorithms.tba.impl.AbbreviationExtractor_impl;
@@ -19,15 +19,15 @@ import org.csclub.abbrev.impl.ConfigurationParameter;
 public class ThresholdBasedAlgorithm extends Algorithm {
     
     @ConfigurationParameter(name = "Threshold", defaultValue = "32")
-    private int threshold;
+    private Integer threshold;
 
     private AbbreviationCounter abbrevCounter;
     private AbbreviationExtractor abrbevExtractor;
     
-    private List<Abbreviation> abbreviations;
+    private List<WeightedAbbreviation> abbreviations;
     
-    public void setThreshold(int threshold) { this.threshold = threshold; }
-    public int getThreshold() { return threshold; }
+    public void setThreshold(Integer threshold) { this.threshold = threshold; }
+    public Integer getThreshold() { return threshold; }
     
     public ThresholdBasedAlgorithm() {
         abbrevCounter = new AbbreviationCounter_impl();//TrieAbbreviationCounter();
@@ -47,14 +47,14 @@ public class ThresholdBasedAlgorithm extends Algorithm {
         
         abbreviations = new ArrayList<> ();
         for (CorpusAbbreviation abbrev : allAbbreviations) {
-            if (abbrev.getAbbrevCount() >= threshold) {
-                abbreviations.add(abbrev);
+            if (threshold == null || abbrev.getAbbrevCount() >= threshold) {
+                abbreviations.add(new WeightedAbbreviation(abbrev.getAbbrevText(), abbrev.getAbbrevCount()));
             }
         }
     }
 
     @Override
-    public List<Abbreviation> getAbbreviations() { 
+    public List<WeightedAbbreviation> getAbbreviations() { 
         return abbreviations; 
     }
     
