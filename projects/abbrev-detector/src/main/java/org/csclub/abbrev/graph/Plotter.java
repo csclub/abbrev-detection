@@ -65,26 +65,27 @@ public class Plotter {
         plot.addLinePlot(title, y);
         */
         
-        /*
+        
         // load precision or recall values
-        String fileName = Paths.get(System.getProperty("user.dir"), "../../datasets/brown-corpus/experiments/FreeLing/config/precision-recall/results/brown-f1.data").toString();
+        String fileName = Paths.get(System.getProperty("user.dir"), "../../datasets/brown-corpus/experiments/FreeLing/config/precision-recall/results/brown-r.data").toString();
         String fileEncoding = "UTF-8";
         double[] y = loadDoubleColumn(fileName, fileEncoding);
         Plot2DPanel plot = new Plot2DPanel();
-        String title = "f1";
-        //plot.addLinePlot(title, y);
-        plot.addScatterPlot(title, y);
-        */
+        String title = "r";
+        plot.addLinePlot(title, y);
+        //plot.addScatterPlot(title, y);
         
+        /*
         // load precision-recall curve
         String fileName = Paths.get(System.getProperty("user.dir"), "../../datasets/brown-corpus/experiments/FreeLing/config/precision-recall/results/brown-pr.data").toString();
         String fileEncoding = "UTF-8";
         double[][] pr = loadDoubleColumns(fileName, fileEncoding, 2);
         Plot2DPanel plot = new Plot2DPanel();
         String title = "precision-recall";
-        plot.addLinePlot(title, Color.BLACK, pr[0], pr[1]);
-        plot.addScatterPlot(title,pr[0], pr[1]);
-        
+        // precision \t recall
+        plot.addLinePlot(title, Color.BLACK, pr[1], pr[0]);
+        plot.addScatterPlot(title, pr[1], pr[0]);
+        */
         
         /*
         Plot3DPanel plot = new Plot3DPanel();
