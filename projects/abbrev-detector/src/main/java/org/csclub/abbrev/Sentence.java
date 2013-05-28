@@ -21,7 +21,7 @@ public class Sentence {
     
     public Sentence(String sentence) {
         this.sentence = sentence;
-        this.tokens = AbbreviationUtils.tokenize(sentence);
+        this.tokens = AbbreviationUtils.tokenize(sentence, false);
     }
     
     public Sentence(String sentence, List<String> tokens) {

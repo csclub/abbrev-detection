@@ -28,14 +28,16 @@ public class LengthBasedAlgorithm extends Algorithm {
     public LengthBasedAlgorithm() {
         abbrevCounter = new AbbreviationCounter_impl();
         abrbevExtractor = new AbbreviationExtractor_impl();
+        
+        AbbreviationCounter_impl abbrevCounterImpl = (AbbreviationCounter_impl)abbrevCounter;
+        abbrevCounterImpl.setSortStrategy(AbbreviationCounter_impl.SortStrategy.ByLenghAndFrequency);
     }
     
     @Override
     public void run(Corpus corpus) {
         
         for (Sentence sentence : corpus.getSentences()) {
-            List<CorpusAbbreviation> sentenceAbbreviations = 
-                    abrbevExtractor.extract(sentence);
+            List<CorpusAbbreviation> sentenceAbbreviations = abrbevExtractor.extract(sentence);
             abbrevCounter.onNewAbbreviations(sentenceAbbreviations);
         }
         

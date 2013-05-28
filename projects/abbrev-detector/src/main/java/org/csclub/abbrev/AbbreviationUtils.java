@@ -23,10 +23,14 @@ public class AbbreviationUtils {
     }
     
     
-    public static List<String> tokenize(String sentence) {
+    public static List<String> tokenize(String sentence, boolean skipLastSentenceToken) {
         String[] tempTokens = sentence.split("[\\s()\"«»\\[\\]?:,;!]");
         List<String> tokens = new ArrayList();
-        for (int i = 0; i < tempTokens.length; ++i) {
+        int tokensCount = tempTokens.length;
+        for (int i = 0; i <tokensCount ; ++i) {
+            if (i==tokensCount-1 && skipLastSentenceToken) {
+                break;
+            }
             if (!tempTokens[i].isEmpty()) {
                 tokens.add(tempTokens[i].replaceAll("\\.+", "."));
             }
@@ -45,11 +49,16 @@ public class AbbreviationUtils {
         return tokens;
     }
     
-    public static List<String> tokenize(Corpus corpus) {
+    public static List<String> tokenize(Corpus corpus, boolean skipLastSentenceToken) {
         List<String> tokens = new ArrayList();
         for (Sentence sentence : corpus.getSentences()) {
-            for (String token : sentence.getTokens()) {
-                token = token.replaceAll("\\.+", ".");
+            List<String> sentenceTokens = sentence.getTokens();
+            int sentenceTokensCount = sentenceTokens.size();
+            for (int i=0;i<sentenceTokensCount; i++) {
+                if (i==sentenceTokensCount-1 && skipLastSentenceToken) {
+                    break;
+                }
+                String token = sentenceTokens.get(i).replaceAll("\\.+", ".");
                 if (token.endsWith(".")) {
                     if (token.length() > 1) {
                         tokens.add(token.substring(0, token.length() - 1));

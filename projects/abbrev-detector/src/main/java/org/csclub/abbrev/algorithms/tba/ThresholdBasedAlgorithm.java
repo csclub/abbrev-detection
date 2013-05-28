@@ -30,8 +30,11 @@ public class ThresholdBasedAlgorithm extends Algorithm {
     public Integer getThreshold() { return threshold; }
     
     public ThresholdBasedAlgorithm() {
-        abbrevCounter = new AbbreviationCounter_impl();//TrieAbbreviationCounter();
+        abbrevCounter = new AbbreviationCounter_impl();
         abrbevExtractor = new AbbreviationExtractor_impl();
+        
+        AbbreviationCounter_impl abbrevCounterImpl = (AbbreviationCounter_impl)abbrevCounter;
+        abbrevCounterImpl.setSortStrategy(AbbreviationCounter_impl.SortStrategy.ByFrequency);
     }
     
     @Override

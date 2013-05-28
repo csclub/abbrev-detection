@@ -1,0 +1,360 @@
+
+## macros to be used in RegExps rules
+<Macros>
+ALPHA	   [[:alpha:]]
+ALPHANUM   [[:alnum:]º°]
+SYMNUM     [\.:,_/\\=\*\+\-º°&$€£¢¥#%]
+OTHERS     .
+APOSTR_WD  (all|anch|assuefa|c|cent|cinquant|citta|com|confa|d|da|dall|dell|di|diciott|disfa|dov|fa|l|libertà|liquefa|m|malfa|n|nell|novant|ottant|po|putrefa|pò|quarant|quarantott|quell|quest|rarefa|rida|ridi|rifa|riva|s|senz|sessant|settant|societa|soddisfa|sopraffa|sott|sottosta|sta|strafa|stupefa|sull|un|va|vent|ventott|vu)
+</Macros>
+
+## Tokenization rules. They are applied in the order of definition.
+## The first matching the *beginning* of the line is applied
+## and a token built. The process is repeated until the line 
+## has been completely processed.
+##    -The first field in the rule is the rule name. If it starts
+##     with a "*", the RegExp will only produce a token if the 
+##     match is found in abbreviation list <Abbreviations> below.
+##    -The second field in the rule is the substring to form the token/s with
+##     It may be 0 (the match of the whole expression) or any number
+##     from 1 to the number of substrings (up to 9). A token will be
+##     created for each substring from 1 to the specified value.
+##    -The third field is the regexp to match against the line
+## 
+<RegExps>
+INDEX_SEQUENCE  0  (\.{4,}|-{2,}|\*{2,}|_{2,}|/{2,})
+INITIALS1       1  ([A-Z](\.[A-Z])+)(\.\.\.)
+INITIALS2 	0  ([A-Z]\.)+
+TIMES           0  (([01]?[0-9]|2[0-4]):[0-5][0-9])
+NAMES_CODES	0  ({ALPHA}|{SYMNUM})*[0-9]({ALPHA}|[0-9]|{SYMNUM}+{ALPHANUM})*
+THREE_DOTS 	0  (\.\.\.)
+QUOTES	        0  (``|<<|>>|'')
+MAILS 	        0  {ALPHANUM}+([\._]{ALPHANUM}+)*@{ALPHANUM}+([\._]{ALPHANUM}+)*
+APOSTR_IT       1  ({APOSTR_WD}')({ALPHA})
+URLS1 	        0  ((mailto:|(news|http|https|ftp|ftps)://)[\w\.\-]+|^(www(\.[\w\-]+)+))
+URLS2           1  ([\w\.\-]+\.(com|org|net))[\s]
+KEEP_COMPOUNDS  0  {ALPHA}+(['_\-\+]{ALPHA}+)+
+*ABREVIATIONS1  0  (({ALPHA}+\.)+)(?!\.\.)
+*ABREVIATIONS2  0  ({ALPHA}+\.)(?!\.\.)
+WORD            0  {ALPHANUM}+[\+]*
+OTHERS_C        0  {OTHERS}
+</RegExps>
+
+## Abbreviations.  The dot is not tokenized separately
+## in the cases listed below.
+<Abbreviations>
+nn.
+n.
+ecc.
+sig.
+onn.
+Rev.
+On.
+cfr.
+dott.
+Autore.
+prof.
+etc.
+rev.
+u.s.
+def.
+art.
+p.m.
+S.A.
+doc.
+S.E.M.
+pag.
+W.
+Sig.
+on.
+ca.
+S.L.
+S.O.S.
+Prof.
+d.C.
+W.G.
+C.S.
+lett.
+Onn.
+Dr.
+Sp.
+dr.
+S.p.A.
+I.V.A.
+P.I.L.
+c.d.
+Dott.
+p.es.
+F.T.
+Div.
+spp.
+D.G.
+S.E.
+a.C.
+sgg.
+U.S.
+N.V.
+Inc.
+J.K.
+J.C.
+impedirla.
+es.
+cd.
+U.S.A.
+hf.
+Nr.
+pv.
+nr.
+decade.
+pagg.
+sigg.
+segg.
+artt.
+eccetera.
+Tueni.
+Dkr.
+Cfr.
+soi.
+T.D.
+vol.
+suI.
+t.m.
+P.V.
+W.B.
+W.F.
+A.J.
+D.C.
+D.H.
+lap.
+C.V.
+N.J.
+B.A.
+D.R.
+age.
+K.P.
+K.O.
+C.N.
+C.H.
+R.W.
+R.D.
+G.O.
+G.U.
+n.v.
+www.
+J.P.
+H.C.
+seg.
+J.L.
+DGX.
+IBSFC.
+v.q.p.r.d.
+Ph.D.
+Sisa.
+mons.
+Sapard.
+Geoana.
+ressa.
+Batista.
+tagichi.
+operarvi.
+P.O.R.
+N.F.S.
+EM.TV.
+Stahl.
+I.M.E.
+Valmy.
+n.c.a.
+Codec.
+Moran.
+M.S.F.
+CC.OO.
+Wagau.
+arrosto.
+abusanti.
+settico.
+v.s.q.p.r.d.
+Donnici.
+furani.
+Semtex.
+Masiel.
+plebaglia.
+meritarlo.
+PNV-EA.
+Corral.
+fiordi.
+forget.
+Rowohl.
+Annaba.
+Atenei.
+Dubout.
+Ayalew.
+serien.
+Siesby.
+Cochin.
+oleico.
+sperati.
+ovviarli.
+uncinata.
+impuniti.
+poliuretano.
+braille.
+mozzate.
+penalty.
+Sidney.
+fasulle.
+M.E.G.A.
+cascine.
+Bambino.
+Electra.
+Fontane.
+PA.SO.K.
+Marinon.
+S.L.I.M.
+anemici.
+salirci.
+spol.sr.
+E.S.S.T.
+O.A.C.I.
+-azione.
+A.A.J.G.
+operoso.
+INQUEST.
+Anseatica.
+sibillini.
+Mediterranea.
+tax-free.
+naufragò.
+Eurofund.
+Proverbi.
+Fukayama.
+commiati.
+Gligorov.
+provieni.
+castagno.
+calmarle.
+Napredak.
+Bromwich.
+piccanti.
+avariato.
+stregata.
+Odisseus.
+irreale.
+dargliela.
+conseguirli.
+cambiarlo.
+applaude.
+antiaerea.
+Magnifico.
+depauperate.
+Bartillat.
+epizotica.
+timetable.
+Portorico.
+monastico.
+pre-Nizza.
+V.Q.P.R.D.
+tele-lavoro.
+travisata.
+motivarla.
+conseguirlo.
+pindarici.
+astensioni.
+benaccette.
+insperato.
+telegrafico.
+Garzweiler.
+Pepsi-Cola.
+plasmabili.
+isolamemto.
+Counsiglio.
+Sellafiled.
+cacofonici.
+misantropo.
+svegliarmi.
+Washingtom.
+fornirmeli.
+polemicità.
+résolution.
+disincanti.
+secretarli.
+opprimerlo.
+degradarlo.
+apodittico.
+cavalcarla.
+scioperino.
+perforanti.
+inquisitorie.
+debellarlo.
+dilettevole.
+scandalizzo.
+respingerli.
+ascoltarle.
+Cap-Haïtien.
+examination.
+engagements.
+agonizzando.
+roulottisti.
+elencarvele.
+-altrimenti.
+neorazzisti.
+Persichetti.
+esautorarli.
+boicottarli.
+Diepenbroek.
+inefficenti.
+prorompenti.
+Maaastricht.
+quaresimale.
+anticristiano.
+aristocratico.
+disorientato.
+risuscitarlo.
+accompagnarla.
+supponessero.
+antimolestie.
+ginecologica.
+asterrebbero.
+irredentista.
+informiamoli.
+disposizionì.
+concedercela.
+affievolirla.
+riportarcela.
+ratificabile.
+espletazione.
+auteursrecht.
+persuasività.
+descrivibili.
+esercitarli.
+rafforzarle.
+rispettarlo.
+rallegrarcene.
+riprogrammata.
+preindustriali.
+micro-gestore.
+risusciterete.
+determinabili.
+preauthorized.
+Preserviamolo.
+europeizzando.
+permetterceli.
+organizzabile.
+sclerotizzate.
+basco-catalana.
+peregrinazione.
+www.buildup.eu.
+walkie-talkies.
+risvegliassero.
+ammorbidiscono.
+videoregistrazioni.
+fortezza-Europa.
+ingressi-uscite.
+autorganizzarsi.
+sovralimentadole.
+bioterroristiche.
+uomo-donna-figli.
+particolaristica.
+policlorobifenile.
+costantinopoliana.
+oligopolizzazione.
+</Abbreviations>

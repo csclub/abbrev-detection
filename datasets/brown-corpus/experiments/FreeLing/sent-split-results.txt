@@ -1,0 +1,6 @@
+brown corpus detokenized using OpenNLP rule-based English detokenizer
+
+	no-abbrev:                Precision: 0,798502, Recall: 0,687722, F-measure: 0,738983
+	default:                  Precision: 0,851182, Recall: 0,705424, F-measure: 0,771478
+	likelihood-rations:       Precision: 0,855425, Recall: 0,708284, F-measure: 0,774932
+	                             

@@ -19,6 +19,7 @@ import org.csclub.abbrev.algorithms.tba.CorpusAbbreviation;
 public class AbbreviationExtractor_impl implements AbbreviationExtractor <CorpusAbbreviation> {
     
     private  Pattern simpleAbbrevPattern;
+    private boolean skipLastSentenceToken = true;
     
     public AbbreviationExtractor_impl() {
         simpleAbbrevPattern = Pattern.compile("(\\p{L}|[.-])*\\p{L}+[.]$");
@@ -36,11 +37,15 @@ public class AbbreviationExtractor_impl implements AbbreviationExtractor <Corpus
         if (null != sentence.getTokens()) {
             tokens = sentence.getTokens();
         } else {
-            tokens = AbbreviationUtils.tokenize(sentence.getSentence());
+            tokens = AbbreviationUtils.tokenize(sentence.getSentence(), false);
         }
         
         List<CorpusAbbreviation> abbreviations = new ArrayList();
-        for (int i = 0; i < tokens.size(); i++) {
+        int tokensCount = tokens.size();
+        for (int i = 0; i < tokensCount; i++) {
+            if (i==tokensCount-1 && skipLastSentenceToken) {
+                break;
+            }
             if (tokens.get(i).endsWith(".")) {
                 // get abbreviation
                 String abbrevText = getTokenAbbreviation(tokens.get(i));
@@ -48,7 +53,7 @@ public class AbbreviationExtractor_impl implements AbbreviationExtractor <Corpus
                     continue;
                 }
                 
-                CorpusAbbreviation abbrev = new CorpusAbbreviation(tokens.get(i));
+                CorpusAbbreviation abbrev = new CorpusAbbreviation(abbrevText);
                 
                 // get abbreviation context
                 String context = "";
@@ -87,4 +92,15 @@ public class AbbreviationExtractor_impl implements AbbreviationExtractor <Corpus
         return _token;
     }
     //
+    public static void main(String [] args) {
+        String sentenceText = "Я был на к.с.к. 5 когда открылась дверь.";
+        Sentence sentence = new Sentence(sentenceText);
+        
+        AbbreviationExtractor extractor = new AbbreviationExtractor_impl ();
+        List<CorpusAbbreviation> abbrevList = extractor.extract(sentence);
+        
+        for (CorpusAbbreviation abbrev : abbrevList) {
+            System.out.println(abbrev);
+        }
+    }
 }

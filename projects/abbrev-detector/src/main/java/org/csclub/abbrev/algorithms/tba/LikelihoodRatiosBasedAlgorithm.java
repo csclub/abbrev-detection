@@ -59,18 +59,20 @@ public class LikelihoodRatiosBasedAlgorithm extends Algorithm {
     public LikelihoodRatiosBasedAlgorithm() {
         abbrevCounter = new AbbreviationCounter_impl();
         abrbevExtractor = new AbbreviationExtractor_impl();
+        
+        AbbreviationCounter_impl abbrevCounterImpl = (AbbreviationCounter_impl)abbrevCounter;
+        abbrevCounterImpl.setSortStrategy(AbbreviationCounter_impl.SortStrategy.None);
     }
     
     @Override
     public void run(Corpus corpus) {
         
         for (Sentence sentence : corpus.getSentences()) {
-            List<CorpusAbbreviation> sentenceAbbreviations = 
-                    abrbevExtractor.extract(sentence);
+            List<CorpusAbbreviation> sentenceAbbreviations = abrbevExtractor.extract(sentence);
             abbrevCounter.onNewAbbreviations(sentenceAbbreviations);
         }
         
-        List<String> neibTokens = AbbreviationUtils.tokenize(corpus);
+        List<String> neibTokens = AbbreviationUtils.tokenize(corpus, false);
         List<Abbreviation> sortedAbbreviations = abbrevCounter.getSortedAbbreviations();
         
         List<TwoByTwoTable> tables = TwoByTwoTable.getAbbreviationTables(
@@ -109,6 +111,14 @@ public class LikelihoodRatiosBasedAlgorithm extends Algorithm {
             double s3 = Math.exp(-table.getFirstWord().length());
             
             double logLambdaScaled = -2  * s1 * s2 * s3 * logLambda;
+            
+            if (Double.isNaN(logLambdaScaled)) {
+                continue;
+            } else if (logLambdaScaled == Double.POSITIVE_INFINITY) {
+                logLambdaScaled = Double.MAX_VALUE;
+            } else if (logLambdaScaled == Double.NEGATIVE_INFINITY){
+                logLambdaScaled = Double.MIN_VALUE;
+            }
 
             if (threshold == null || logLambdaScaled > threshold) {
                 String abbrevText = table.getFirstWord() + AbbreviationUtils.PERIOD;
