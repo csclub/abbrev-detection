@@ -8,7 +8,7 @@
 \usepackage{tabularx}
 
 \author{Амосов Федор}
-\institute{HP Labs}
+\institute{HP Labs, СПбГУ}
 \title{Построение словаря сокращений}
 \date{29 мая 2013 г.}
 
@@ -93,21 +93,95 @@
 		\end{table}
     \end{frame}
 
-	\begin{frame} {Практическое применение: токенизация (1)}
+	\begin{frame} {Токенизация английских текстов (1)}
 		\begin{itemize}
 			\item
 				Брауновский корпус ($\sim$ 60000 предложений)
 			\item
-				Извлечение сокращений (таблица) методом LR.
+				Сокращения, извлеченные методом LR ($282$ кандидата)
+				\begin{table} [ht] 
+					\begin{tabular} { c  c }
+						Mr.		&	314	\\%$1.8 \cdot 10^{314}$	\\
+						Mrs.	&	232	\\%$2.4 \cdot 10^{232}$	\\
+						Dr.		&	84	\\%$5.0 \cdot 10^{84}$		\\
+						St.		&	72	\\%$8.1 \cdot 10^{72}$		\\
+						U.S.	&	70	\\%$5.3 \cdot 10^{70}$		\\
+						Jr.		&	34	\\%$2.3 \cdot 10^{34}$		\\
+						etc.	&	26	\\%$2.7 \cdot 10^{26}$		\\
+						Fig.	&	25	\\%$9.7 \cdot 10^{25}$		\\
+						p.m.	&	24	\\%$1.6 \cdot 10^{24}$		\\
+						...		&	...						\\
+						%U.N.	&	$6.0 \times 10^{23}$	\\
+						%i.e.	&	$6.1 \times 10^{19}$	\\
+						%J.		&	$2.9 \times 10^{19}$	\\
+						%Sept.	&	$2.0 \times 10^{15}$	\\
+						%e.g.	&	$7.5 \times 10^{14}$	\\
+					\end{tabular}
+				\end{table}
 			\item
-				На сколько улучшится работа токенайзера FreeLing с разными наборами наилучших сокращений из этого списка?
+				На сколько улучшится работа токенайзера FreeLing с различными наборами наилучших сокращений из этого списка?
 		\end{itemize}
     \end{frame}
 
-	\begin{frame} {Практическое применение: токенизация (2)}
-		График (precision от recall) \\
-		Таблица улучшений \\
-		
+	\begin{frame} {Токенизация английских текстов (2)}
+        \center \includegraphics[width = 10 cm, height = 5.23 cm]{brown-p-r.jpg}
+		\begin{table} [ht] 
+			\begin{tabular} {| c | c | c | c |}
+				%\multicolumn{1}{p{2.0 cm}}{} & \multicolumn{1}{p{2.0 cm}}{} & \multicolumn{1}{p{2.0 cm}}{} & \multicolumn{1}{p{2.0 cm}}{}	\\
+				\hline
+				\%				&	точность	&	полнота		&	F1--мера	\\
+				\hline
+				без сокращений	&	79.9		&	68.8		&	73.9		\\
+				по умолчанию	&	85.1		&	70.5		&	77.1		\\
+				{\bf LR}		&	{\bf 85.5}	&	{\bf 70.8}	&	{\bf 77.5}	\\
+				\hline
+			\end{tabular}
+		\end{table}
+    \end{frame}
+
+	\begin{frame} {Токенизация биомедицинских текстов (1)}
+		\begin{itemize}
+			\item
+				Корпус MedTag ($\sim$ 6300 предложений)
+			\item
+				Сокращения, извлеченные методом LR ($111$ кандидатов)
+				\begin{table} [ht] 
+					\begin{tabular} { c  c }
+						al.		&	8	\\
+						e.g.	&	7	\\
+						i.e.	&	6	\\
+						J.		&	5	\\
+						S.E.	&	5	\\
+						r.h.	&	3	\\
+						Sph.	&	3	\\
+						Chem.	&	2	\\
+						Ass.	&	2	\\
+						i.v.	&	2	\\
+						Fig.	&	2	\\
+						...		&	...	\\
+					\end{tabular}
+				\end{table}
+			\item
+				FreeLing?
+		\end{itemize}
+    \end{frame}
+
+	\begin{frame} {Токенизация биомедицинских текстов (2)}		
+
+        \center \includegraphics[width = 10 cm, height = 5.23 cm]{medtag-p-r.jpg}
+
+		\begin{table} [ht] 
+			\begin{tabular} {| c | c | c | c |}
+				%\multicolumn{1}{p{2.0 cm}}{} & \multicolumn{1}{p{2.0 cm}}{} & \multicolumn{1}{p{2.0 cm}}{} & \multicolumn{1}{p{2.0 cm}}{}	\\
+				\hline
+				\%				&	точность	&	полнота		&	F1--мера	\\
+				\hline
+				без сокращений	&	94.6		&	93.2		&	93.9		\\
+				по умолчанию	&	94.0		&	91.7		&	92.9		\\
+				{\bf LR}		&	{\bf 95.3}	&	{\bf 93.3}	&	{\bf 94.3}	\\
+				\hline
+			\end{tabular}
+		\end{table}	
     \end{frame}
 
     \begin{frame} {Q\&A}
