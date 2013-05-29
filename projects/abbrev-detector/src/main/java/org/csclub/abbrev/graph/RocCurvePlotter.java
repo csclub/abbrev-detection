@@ -29,11 +29,14 @@ public class RocCurvePlotter {
         
         for (int i = 0; i < lines.size(); ++i) {
             String[] matrix = lines.get(i).split("\t");
-
+            if (matrix.length != 4) {
+                throw new IOException();
+            }
+            
             int tp = Integer.parseInt(matrix[0]);
             int fp = Integer.parseInt(matrix[1]);
-            int fn = Integer.parseInt(matrix[3]);
-            int tn = Integer.parseInt(matrix[2]);
+            int fn = Integer.parseInt(matrix[2]);
+            int tn = Integer.parseInt(matrix[3]);
             
             double tpr = 1.0 * tp / (tp + fn);
             double fpr = 1.0 * fp / (fp + tn);
