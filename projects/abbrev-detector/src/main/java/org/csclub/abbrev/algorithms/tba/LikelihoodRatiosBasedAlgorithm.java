@@ -36,7 +36,7 @@ import org.csclub.abbrev.impl.InitializationException;
  */
 public class LikelihoodRatiosBasedAlgorithm extends Algorithm {
     
-    @ConfigurationParameter(name = "Threshold", defaultValue = "1.00")
+    @ConfigurationParameter(name = "Threshold", defaultValue = "2.00")
     private Double threshold;
 
     private AbbreviationCounter abbrevCounter;
@@ -110,9 +110,6 @@ public class LikelihoodRatiosBasedAlgorithm extends Algorithm {
             
             double s3 = Math.exp(-table.getFirstWord().length());
             
-<<<<<<< HEAD
-            double logLambdaScaled = - s1 * s2 * s3 * logLambda;
-=======
             double logLambdaScaled = -2  * s1 * s2 * s3 * logLambda;
             
             if (Double.isNaN(logLambdaScaled)) {
@@ -122,7 +119,6 @@ public class LikelihoodRatiosBasedAlgorithm extends Algorithm {
             } else if (logLambdaScaled == Double.NEGATIVE_INFINITY){
                 logLambdaScaled = Double.MIN_VALUE;
             }
->>>>>>> f6872a1a9ec6caf626876674a0134be15ffe2a45
 
             if (threshold == null || logLambdaScaled > threshold) {
                 //System.out.println()
