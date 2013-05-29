@@ -121,7 +121,6 @@ public class LikelihoodRatiosBasedAlgorithm extends Algorithm {
             }
 
             if (threshold == null || logLambdaScaled > threshold) {
-                //System.out.println()
                 String abbrevText = table.getFirstWord() + AbbreviationUtils.PERIOD;
                 abbrevTexts.add(abbrevText);
                 abbrevWeights.put(abbrevText, logLambdaScaled);
