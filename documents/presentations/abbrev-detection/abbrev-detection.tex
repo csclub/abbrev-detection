@@ -50,41 +50,64 @@
                 Случайно ли появление слова $w$ и точки в виде \textcolor{red}{$w.$} ?
 				\begin{itemize}
 					\item
-						t--test
+						Стандартные алгоритмы проверки гипотез.
+						\begin{itemize}
+							\item
+								t--test
+							\item
+								Pirson test $\chi^2$
+						\end{itemize}
 					\item
-						Pirson test $\chi^2$
-				\end{itemize}
-
-			\item
-                Случайно ли появление слова $w$ и точки в виде \textcolor{red}{$w.$} , если оно зависит от $|w|$?
-				\begin{itemize}
-					\item
-						likelihood ratios (LR)
-					\item
-						mutual information (MI)
+		 				Алгоритмы, учитывающие специфику сокращений.
+						\begin{itemize}
+							\item
+								scaled likelihood ratios (LR)
+							\item
+								scaled mutual information (MI)
+						\end{itemize}
 				\end{itemize}
             
         \end{itemize}
     \end{frame}
 
     \begin{frame}{Результаты}
+		\center
+			{\bf Тестирование на данных проекта <<Открытый корпус>> \\ ($\sim$ 73000 предложений)}
+		
 		\begin{table} [ht] 
 			\begin{tabular} {| c | c | c | c |}
 				\multicolumn{1}{p{2.0 cm}}{} & \multicolumn{1}{p{2.0 cm}}{} & \multicolumn{1}{p{2.0 cm}}{} & \multicolumn{1}{p{2.0 cm}}{}	\\
 				\hline
-				\%				&	precision	&	recall	&	f--measure	\\
+				\%				&	точность	&	полнота		&	F1--мера	\\
 				\hline
-				 по частоте		&	34			&	8		&	13			\\
-				по длине		&	55			&	38		&	45			\\
+				по частоте		&	34			&	8			&	13			\\
+				по длине		&	55			&	38			&	45			\\
 				\hline
-				t--test			&	28			&	21		&	24			\\
-				test $\chi^2$	&	47 			&	31		&	37			\\
+				t--test			&	28			&	21			&	24			\\
+				test $\chi^2$	&	47 			&	31			&	37			\\
 				\hline
-				MI 				&	70			&	42		&	52			\\
-				LR				&	71			&	46		&	56			\\
+				MI 				&	70			&	42			&	52			\\
+				{\bf LR}		&	{\bf 71}	&	{\bf 46}	&	{\bf 56}	\\
 				\hline
 			\end{tabular}
 		\end{table}
+    \end{frame}
+
+	\begin{frame} {Практическое применение: токенизация (1)}
+		\begin{itemize}
+			\item
+				Брауновский корпус ($\sim$ 60000 предложений)
+			\item
+				Извлечение сокращений (таблица) методом LR.
+			\item
+				На сколько улучшится работа токенайзера FreeLing с разными наборами наилучших сокращений из этого списка?
+		\end{itemize}
+    \end{frame}
+
+	\begin{frame} {Практическое применение: токенизация (2)}
+		График (precision от recall) \\
+		Таблица улучшений \\
+		
     \end{frame}
 
     \begin{frame} {Q\&A}
