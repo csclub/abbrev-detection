@@ -38,18 +38,20 @@ public class MutualInformationBasedAlgorithm extends Algorithm {
     public MutualInformationBasedAlgorithm() {
         abbrevCounter = new AbbreviationCounter_impl();
         abrbevExtractor = new AbbreviationExtractor_impl();
+        
+        AbbreviationCounter_impl abbrevCounterImpl = (AbbreviationCounter_impl)abbrevCounter;
+        abbrevCounterImpl.setSortStrategy(AbbreviationCounter_impl.SortStrategy.None);
     }
     
     @Override
     public void run(Corpus corpus) {
         
         for (Sentence sentence : corpus.getSentences()) {
-            List<CorpusAbbreviation> sentenceAbbreviations = 
-                    abrbevExtractor.extract(sentence);
+            List<CorpusAbbreviation> sentenceAbbreviations = abrbevExtractor.extract(sentence);
             abbrevCounter.onNewAbbreviations(sentenceAbbreviations);
         }
         
-        List<String> neibTokens = AbbreviationUtils.tokenize(corpus);
+        List<String> neibTokens = AbbreviationUtils.tokenize(corpus, false);
         List<Abbreviation> sortedAbbreviations = abbrevCounter.getSortedAbbreviations();
         
         List<TwoByTwoTable> tables = TwoByTwoTable.getAbbreviationTables(
@@ -75,6 +77,14 @@ public class MutualInformationBasedAlgorithm extends Algorithm {
             double s2 = Math.exp(-table.getFirstWord().length());
             
             double mi = s1 * s2 * iWP; 
+            
+            if (Double.isNaN(mi)) {
+                continue;
+            } else if (mi == Double.POSITIVE_INFINITY) {
+                mi = Double.MAX_VALUE;
+            } else if (mi == Double.NEGATIVE_INFINITY){
+                mi = Double.MIN_VALUE;
+            }
 
             if (threshold == null || mi > threshold) {
                 String abbrevText = table.getFirstWord() + AbbreviationUtils.PERIOD;

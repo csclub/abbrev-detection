@@ -118,9 +118,12 @@ public class CorpusAbbreviation extends Abbreviation {
         return cur;
     }
     
-    public void incrementCounter() { this.abbrevCount ++; }
-    public void incrementCounter(int count) { 
-        this.abbrevCount += count; 
+    public void incrementCounter() { 
+        incrementCounter(1);
+    }
+    public void incrementCounter(int value) { 
+        int maxIncrementValue = Integer.MAX_VALUE - this.abbrevCount;
+        this.abbrevCount += Math.min(value, maxIncrementValue);
     }
     
     @Override

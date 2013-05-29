@@ -59,18 +59,20 @@ public class LikelihoodRatiosBasedAlgorithm extends Algorithm {
     public LikelihoodRatiosBasedAlgorithm() {
         abbrevCounter = new AbbreviationCounter_impl();
         abrbevExtractor = new AbbreviationExtractor_impl();
+        
+        AbbreviationCounter_impl abbrevCounterImpl = (AbbreviationCounter_impl)abbrevCounter;
+        abbrevCounterImpl.setSortStrategy(AbbreviationCounter_impl.SortStrategy.None);
     }
     
     @Override
     public void run(Corpus corpus) {
         
         for (Sentence sentence : corpus.getSentences()) {
-            List<CorpusAbbreviation> sentenceAbbreviations = 
-                    abrbevExtractor.extract(sentence);
+            List<CorpusAbbreviation> sentenceAbbreviations = abrbevExtractor.extract(sentence);
             abbrevCounter.onNewAbbreviations(sentenceAbbreviations);
         }
         
-        List<String> neibTokens = AbbreviationUtils.tokenize(corpus);
+        List<String> neibTokens = AbbreviationUtils.tokenize(corpus, false);
         List<Abbreviation> sortedAbbreviations = abbrevCounter.getSortedAbbreviations();
         
         List<TwoByTwoTable> tables = TwoByTwoTable.getAbbreviationTables(
@@ -108,7 +110,19 @@ public class LikelihoodRatiosBasedAlgorithm extends Algorithm {
             
             double s3 = Math.exp(-table.getFirstWord().length());
             
+<<<<<<< HEAD
             double logLambdaScaled = - s1 * s2 * s3 * logLambda;
+=======
+            double logLambdaScaled = -2  * s1 * s2 * s3 * logLambda;
+            
+            if (Double.isNaN(logLambdaScaled)) {
+                continue;
+            } else if (logLambdaScaled == Double.POSITIVE_INFINITY) {
+                logLambdaScaled = Double.MAX_VALUE;
+            } else if (logLambdaScaled == Double.NEGATIVE_INFINITY){
+                logLambdaScaled = Double.MIN_VALUE;
+            }
+>>>>>>> f6872a1a9ec6caf626876674a0134be15ffe2a45
 
             if (threshold == null || logLambdaScaled > threshold) {
                 //System.out.println()
@@ -131,14 +145,16 @@ public class LikelihoodRatiosBasedAlgorithm extends Algorithm {
     }
     
     public static void main(String [] args) throws InitializationException, Exception {
-        String corpusFile = "C:\\archive\\storage\\datasets\\mt\\europarl\\archives\\en\\src\\europarl-v7.fr-en.en";
+        String corpusFile = "C:\\archive\\storage\\datasets\\medical\\medtag\\data\\medtag-sents.txt";
         Configuration config = new Configuration(new String [] 
                                                 {   
                                                     "ConnectorClass", "org.csclub.abbrev.connectors.SentPerLineCorpusReader",
                                                     "Connector.FileName", corpusFile,
                                                     "Connector.FileEncoding", "UTF-8",
                                                     "AlgorithmClass", "org.csclub.abbrev.algorithms.tba.LikelihoodRatiosBasedAlgorithm",
-                                                    "Algorithm.allAbbreviationsFileName", "C:\\archive\\storage\\datasets\\mt\\europarl\\archives\\en\\src\\all-abbreviations.txt",
+                                                    "Algorithm.Threshold", ConfigurationParameter.NULL,
+                                                    "OutputFileName", "C:\\work\\projects\\collaboration\\csclub\\abbrev-detection\\datasets\\medtag\\experiments\\FreeLing\\results\\likelihood.txt",
+                                                    "OutputFileEncoding", "UTF-8"
                                                 } 
                                              );
         AbbreviationExtractorEngine app = new AbbreviationExtractorEngine();

@@ -12,8 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.csclub.abbrev.algorithms.tba.AbbreviationCounter;
 import org.csclub.abbrev.algorithms.tba.CorpusAbbreviation;
 
@@ -25,21 +23,36 @@ import org.csclub.abbrev.algorithms.tba.CorpusAbbreviation;
  */
 public class AbbreviationCounter_impl implements AbbreviationCounter <CorpusAbbreviation> {
 
-    private Map<String, CorpusAbbreviation> abbrevCounters;
-    private List<Pair<String, CorpusAbbreviation>> sortedAbbreviations;
+    /** for fast access, a mapping from abbreviation covered text into abbreviation structure */
+    private Map<String, CorpusAbbreviation> abbrevsStatistics;
+    /** list of sorted abbreviations according to occurrence statistics */
+    private List<CorpusAbbreviation> sortedAbbrevs;
+    /***/
+    public static enum SortStrategy {
+        ByLength,
+        ByFrequency,
+        ByLenghAndFrequency,
+        None
+    }
+    SortStrategy sortStrategy = SortStrategy.ByFrequency;
+    
+    public void setSortStrategy(SortStrategy sortStrategy) {
+        this.sortStrategy = sortStrategy;
+        
+    }
     
     public AbbreviationCounter_impl() {
-        abbrevCounters = new HashMap<>();
+        abbrevsStatistics = new HashMap<>();
     }
     
     @Override
     public void onNewAbbreviations(final List<CorpusAbbreviation> abbreviations) {
         for(CorpusAbbreviation abbreviation : abbreviations) {
             String abbrevText = abbreviation.getAbbrevText();
-            if (false == abbrevCounters.containsKey(abbrevText)) {
-                abbrevCounters.put(abbrevText, abbreviation);
+            if (false == abbrevsStatistics.containsKey(abbrevText)) {
+                abbrevsStatistics.put(abbrevText, abbreviation);
             } else {
-                CorpusAbbreviation existingAbbrev = abbrevCounters.get(abbrevText);
+                CorpusAbbreviation existingAbbrev = abbrevsStatistics.get(abbrevText);
                 existingAbbrev.incrementCounter();
                 for(String abbrevContext : abbreviation.getAbbrevContexts()) {
                     existingAbbrev.addAbbrevContext(abbrevContext);
@@ -50,55 +63,71 @@ public class AbbreviationCounter_impl implements AbbreviationCounter <CorpusAbbr
     
     @Override
     public void corpusProcessComplete() {
-        sortedAbbreviations = new ArrayList<> ();
-        for (Entry<String, CorpusAbbreviation> entry : abbrevCounters.entrySet()) {
-            sortedAbbreviations.add(new ImmutablePair<> (entry.getKey(), entry.getValue()));
+        sortedAbbrevs = new ArrayList<> ();
+        for (Entry<String, CorpusAbbreviation> entry : abbrevsStatistics.entrySet()) {
+            sortedAbbrevs.add(entry.getValue());
         }
-        Collections.sort(sortedAbbreviations, new Comparator<Pair<String, CorpusAbbreviation>>() {
-            @Override
-            public int compare(Pair<String, CorpusAbbreviation> o1, Pair<String, CorpusAbbreviation> o2) {
-                
-                if (o1.getKey().length() > o2.getKey().length()) {
-                    return 1;
+        if ( sortStrategy != SortStrategy.None) {
+            Collections.sort(sortedAbbrevs, new Comparator<CorpusAbbreviation>() {
+                @Override
+                public int compare(CorpusAbbreviation o1, CorpusAbbreviation o2) {
+
+                    switch (sortStrategy) {
+                        case ByLength:
+                            if (o1.getAbbrevText().length() > o2.getAbbrevText().length()) {
+                                return 1;
+                            }
+                            if (o1.getAbbrevText().length() < o2.getAbbrevText().length()) {
+                                return -1;
+                            }
+                            return 0;
+
+                        case ByFrequency:
+                            if (o1.getAbbrevCount() < o2.getAbbrevCount() ) {
+                                return 1;
+                            }
+                            if (o1.getAbbrevCount() > o2.getAbbrevCount() ) {
+                                return -1;
+                            }
+                            return 0;
+                        case ByLenghAndFrequency:
+                            if (o1.getAbbrevText().length() > o2.getAbbrevText().length()) {
+                                return 1;
+                            }
+                            if (o1.getAbbrevText().length() < o2.getAbbrevText().length()) {
+                                return -1;
+                            }
+                            if (o1.getAbbrevCount() < o2.getAbbrevCount() ) {
+                                return 1;
+                            }
+                            if (o1.getAbbrevCount() > o2.getAbbrevCount() ) {
+                                return -1;
+                            }
+                            return 0;
+                        case None:
+                        default:
+                            return 0;
+                    }
                 }
-                if (o1.getKey().length() < o2.getKey().length()) {
-                    return -1;
-                }
-                
-                if (o1.getValue().getAbbrevCount() < o2.getValue().getAbbrevCount() ) {
-                    return 1;
-                }
-                if (o1.getValue().getAbbrevCount() > o2.getValue().getAbbrevCount() ) {
-                    return -1;
-                }
-                
-                return 0;
-            }
-        });
+            });
+        }
     }
     
     @Override
     public void print(PrintStream ps) {
-        for (Pair<String, CorpusAbbreviation> abbreviation : sortedAbbreviations) {
-            ps.println(abbreviation.getValue().toString());
+        for (CorpusAbbreviation abbreviation : sortedAbbrevs) {
+            ps.println(abbreviation);
         }
         System.out.println("-----");
-        System.out.println("Total number of unique abbreviations: " + sortedAbbreviations.size());
+        System.out.println("Total number of unique abbreviations: " + sortedAbbrevs.size());
         
     }
     
     @Override
     public List<CorpusAbbreviation> getSortedAbbreviations() {
-        if (sortedAbbreviations == null) {
+        if (null == sortedAbbrevs) {
             corpusProcessComplete();
         }
-        
-        List<CorpusAbbreviation> result = new ArrayList<>();
-        
-        for (Pair<String, CorpusAbbreviation> abbreviation : sortedAbbreviations) {
-            result.add(abbreviation.getValue());
-        }
-        
-        return result;
+        return sortedAbbrevs;
     }
 }
