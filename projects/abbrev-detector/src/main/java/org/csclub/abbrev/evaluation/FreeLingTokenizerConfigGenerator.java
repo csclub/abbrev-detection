@@ -18,9 +18,9 @@ import org.apache.commons.io.IOUtils;
 public class FreeLingTokenizerConfigGenerator {
     
     public static void main(String [] args) throws FileNotFoundException, IOException {
-        String abbreviationFilename = "C:\\work\\projects\\collaboration\\csclub\\abbrev-detection\\datasets\\brown-corpus\\abbreviations\\brown-likelihood.txt";
+        String abbreviationFilename = "C:\\work\\projects\\collaboration\\csclub\\abbrev-detection\\datasets\\medtag\\experiments\\FreeLing\\results\\medtag-likelihood.txt";
         String freelinkTokenizerTemplateFilename = "C:\\work\\projects\\collaboration\\csclub\\abbrev-detection\\datasets\\brown-corpus\\experiments\\FreeLing\\config\\precision-recall\\template\\tokenizer-template.dat";
-        String outputDirectory = "C:\\work\\projects\\collaboration\\csclub\\abbrev-detection\\datasets\\brown-corpus\\experiments\\FreeLing\\config\\precision-recall\\configs\\";
+        String outputDirectory = "C:\\work\\projects\\collaboration\\csclub\\abbrev-detection\\datasets\\medtag\\experiments\\FreeLing\\output\\pr\\";
         
         // read template into memory
         List<String> freelingConfig = IOUtils.readLines(new FileInputStream(freelinkTokenizerTemplateFilename), "UTF-8");

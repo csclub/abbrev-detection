@@ -1,0 +1,7 @@
+MedTag dataset: A database of linguistic annotation of medical text (from MEDLINE), including corpora used with ABGene, BioCreative I and II, and the MedPost training corpus.
+	number of sentences: 6283
+	average sentence length: 22.49 words
+
+default:       Precision: 0,940744, Recall: 0,917237, F-measure: 0,928842
+no-abbrev:     Precision: 0,946330, Recall: 0,931721, F-measure: 0,938969
+likelihood-86: Precision: 0,953458, Recall: 0,932516, F-measure: 0,942871
